@@ -1,227 +1,42 @@
-<div title="Meet The Team" class="px-4 md:px-6 w-full max-w-screen overflow-x-hidden">
+---
+interface TeamMember {
+    name: string;
+    title: string;
+    image: string;
+}
+
+const TeamMembers: TeamMember[] = [
+    {
+        name: 'Christa Summerville',
+        title: 'CEO, Marketing Executive',
+        image: '/images/christa.jpg'
+    },
+    {
+        name: 'Anthony Felker',
+        title: 'Marketing Manager, Web Developer',
+        image: '/images/Anthony.jpg'
+    }
+];
+---
+
+<div class="px-4 md:px-6 w-full max-w-screen overflow-x-hidden pb-16">
     <div class="flex flex-wrap justify-center gap-6">
-        <!-- Card 1 -->
-        <div
-            class="relative max-w-sm w-full bg-[#451a6b] text-white rounded-3xl shadow-xl p-6 border border-[#d05d97] hover:shadow-2xl transition-shadow duration-300 group flex flex-col justify-between"
-        >
-            <div title="Christa Summerville" class="flex flex-col items-center space-y-4">
-                <img
-                    src="/images/christa.jpg"
-                    alt="pretty blonde lady with HUGE brains"
-                    class="cover w-48 h-48 object-cover rounded-full border-4 border-[#e8cf7c] drop-shadow-xl group-hover:scale-105 transition-transform duration-300"
-                />
-                <div class="text-center">
-                    <h3 class="font-header text-xl tracking-tight">Christa Summerville</h3>
-                    <p class="font-subheader text-sm italic">CEO, Marketing Executive</p>
+        {
+            TeamMembers.map((member) => (
+                <div class="relative max-w-sm w-full bg-[#121214] text-white rounded-2xl shadow-xl p-6 border border-white/5 hover:border-[#451a6b]/50 hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
+                    <div class="flex flex-col items-center space-y-4">
+                        <img
+                            src={member.image}
+                            alt={`Photo of ${member.name}`}
+                            class="w-44 h-44 object-cover rounded-full border-2 border-white/10 group-hover:border-[#451a6b] transition-all duration-300"
+                        />
+                        <div class="text-center">
+                            <h3 class="font-body font-bold text-lg tracking-tight text-white group-hover:text-gray-200 transition-colors">{member.name}</h3>
+                            <p class="font-body text-xs text-gray-400 mt-1 uppercase tracking-wider font-medium">{member.title}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="text-sm font-body text-center mt-6">
-                <div class="flex justify-center flex-wrap gap-2 text-[#e8cf7c] text-lg font-subheader">
-                    <a href="tel:8122432759" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                        <!-- Phone icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                            <path
-                                d="M6.62 10.79a15.464 15.464 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.11-.21c1.12.45 2.33.69 3.58.69.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.62 22 2 13.38 2 3.5 2 2.95 2.45 2.5 3 2.5H6.5c.55 0 1 .45 1 1 0 1.25.24 2.46.69 3.58.15.39.06.84-.22 1.11l-2.2 2.2z"
-                            ></path>
-                        </svg>
-                        <span>812-243-2759</span>
-                    </a>
-                    <a href="mailto:info@monarchmediallc.com" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                        <!-- Email icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                            <path
-                                d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8l8 5 8-5v10H4z"
-                            ></path>
-                        </svg>
-                        <span>info@monarchmediallc.com</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div
-            class="relative max-w-sm w-full bg-[#451a6b] text-white rounded-3xl shadow-xl p-6 border border-[#d05d97] hover:shadow-2xl transition-shadow duration-300 group flex flex-col justify-between"
-        >
-            <div title="Lara Beth" class="flex flex-col items-center space-y-4">
-                <img
-                    src="/images/Lara.jpg"
-                    alt="pretty blonde lady with HUGE brains"
-                    class="cover w-48 h-48 object-cover rounded-full border-4 border-[#e8cf7c] drop-shadow-xl group-hover:scale-105 transition-transform duration-300"
-                />
-                <div class="text-center">
-                    <h3 class="font-header text-xl tracking-tight">Lara Beth</h3>
-                    <p class="font-subheader text-sm italic">Marketing Manager, Social Media</p>
-                </div>
-            </div>
-            <div class="text-sm font-body text-center mt-6">
-                <div class="flex justify-center flex-wrap gap-2 text-[#e8cf7c] text-lg font-subheader">
-                    <a href="tel:8122432759" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                        <!-- Phone icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                            <path
-                                d="M6.62 10.79a15.464 15.464 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.11-.21c1.12.45 2.33.69 3.58.69.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.62 22 2 13.38 2 3.5 2 2.95 2.45 2.5 3 2.5H6.5c.55 0 1 .45 1 1 0 1.25.24 2.46.69 3.58.15.39.06.84-.22 1.11l-2.2 2.2z"
-                            ></path>
-                        </svg>
-                        <span>812-243-2759</span>
-                    </a>
-                    <a href="mailto:info@monarchmediallc.com" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                        <!-- Email icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                            <path
-                                d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8l8 5 8-5v10H4z"
-                            ></path>
-                        </svg>
-                        <span>info@monarchmediallc.com</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div
-            class="relative max-w-sm w-full bg-[#451a6b] text-white rounded-3xl shadow-xl p-6 border border-[#d05d97] hover:shadow-2xl transition-shadow duration-300 group flex flex-col justify-between"
-        >
-            <div title="Kristen Swaim" class="flex flex-col items-center space-y-4">
-                <img
-                    src="/images/Kristen.jpg"
-                    alt="pretty blonde lady with HUGE brains"
-                    class="cover w-48 h-48 object-cover rounded-full border-4 border-[#e8cf7c] drop-shadow-xl group-hover:scale-105 transition-transform duration-300"
-                />
-                <div class="text-center">
-                    <h3 class="font-header text-xl tracking-tight">Kristen Swaim</h3>
-                    <p class="font-subheader text-sm italic">Marketing Manager, Web Design</p>
-                </div>
-            </div>
-            <div class="text-sm font-body text-center mt-6">
-                <div class="flex justify-center flex-wrap gap-2 text-[#e8cf7c] text-lg font-subheader">
-                    <a href="tel:8122432759" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                        <!-- Phone icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                            <path
-                                d="M6.62 10.79a15.464 15.464 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.11-.21c1.12.45 2.33.69 3.58.69.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.62 22 2 13.38 2 3.5 2 2.95 2.45 2.5 3 2.5H6.5c.55 0 1 .45 1 1 0 1.25.24 2.46.69 3.58.15.39.06.84-.22 1.11l-2.2 2.2z"
-                            ></path>
-                        </svg>
-                        <span>812-243-2759</span>
-                    </a>
-                    <a href="mailto:info@monarchmediallc.com" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                        <!-- Email icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                            <path
-                                d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8l8 5 8-5v10H4z"
-                            ></path>
-                        </svg>
-                        <span>info@monarchmediallc.com</span>
-                    </a>
-                </div>
-            </div>
-        </div>
+            ))
+        }
     </div>
 </div>
-
-<!-- <div title="Meet The Team" class="px-4 md:px-6 h-full w-full flex flex-wrap flex-col md:flex-row items-center justify-center overflow-hidden">
-    <div
-        class="h-full relative max-w-sm w-full bg-[#451a6b] text-white rounded-3xl shadow-xl overflow-hidden p-6 border border-[#d05d97] hover:shadow-2xl transition-shadow duration-300 group flex flex-col justify-between"
-    >
-        <div title="Christa Summerville" class="flex flex-col items-center space-y-4">
-            <img
-                src="/images/christa.jpg"
-                alt="pretty blonde lady with HUGE brains"
-                class="cover w-48 h-48 object-cover rounded-full border-4 border-[#e8cf7c] drop-shadow-xl group-hover:scale-105 transition-transform duration-300"
-            />
-            <div class="text-center">
-                <h3 class="font-header text-xl tracking-tight">Christa Summerville</h3>
-                <p class="font-subheader text-sm italic">CEO, Marketing Executive</p>
-            </div>
-        </div>
-        <div class="text-sm font-body text-center mt-6">
-            <div class="flex justify-center flex-wrap gap-2 text-[#e8cf7c] text-lg font-subheader">
-                <a href="tel:8122432759" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                        <path
-                            d="M6.62 10.79a15.464 15.464 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.11-.21c1.12.45 2.33.69 3.58.69.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.62 22 2 13.38 2 3.5 2 2.95 2.45 2.5 3 2.5H6.5c.55 0 1 .45 1 1 0 1.25.24 2.46.69 3.58.15.39.06.84-.22 1.11l-2.2 2.2z"
-                        ></path>
-                    </svg>
-                    <span>812-243-2759</span>
-                </a>
-                <a href="mailto:info@monarchmediallc.com" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8l8 5 8-5v10H4z"
-                        ></path>
-                    </svg>
-                    <span>info@monarchmediallc.com</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div
-        title="Lara Beth"
-        class="h-full relative max-w-sm w-full bg-[#451a6b] text-white rounded-3xl shadow-xl overflow-hidden p-6 border border-[#d05d97] hover:shadow-2xl transition-shadow duration-300 group flex flex-col justify-between"
-    >
-        <div class="flex flex-col items-center space-y-4">
-            <img
-                src="/images/Lara.jpg"
-                alt="pretty blonde lady with HUGE brains"
-                class="cover w-48 h-48 object-cover rounded-full border-4 border-[#e8cf7c] drop-shadow-xl group-hover:scale-105 transition-transform duration-300"
-            />
-            <div class="text-center">
-                <h3 class="font-header text-xl tracking-tight">Lara Beth</h3>
-                <p class="font-subheader text-sm italic">Marketing Manager, Social Media</p>
-            </div>
-        </div>
-        <div class="text-sm font-body text-center mt-6">
-            <div class="flex justify-center flex-wrap gap-2 text-[#e8cf7c] text-lg font-subheader">
-                <a href="tel:8122432759" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                        <path
-                            d="M6.62 10.79a15.464 15.464 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.11-.21c1.12.45 2.33.69 3.58.69.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.62 22 2 13.38 2 3.5 2 2.95 2.45 2.5 3 2.5H6.5c.55 0 1 .45 1 1 0 1.25.24 2.46.69 3.58.15.39.06.84-.22 1.11l-2.2 2.2z"
-                        ></path>
-                    </svg>
-                    <span>812-243-2759</span>
-                </a>
-                <a href="mailto:info@monarchmediallc.com" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8l8 5 8-5v10H4z"
-                        ></path>
-                    </svg>
-                    <span>info@monarchmediallc.com</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div
-        title="Kristen Swaim"
-        class="h-full relative max-w-sm w-full bg-[#451a6b] text-white rounded-3xl shadow-xl overflow-hidden p-6 border border-[#d05d97] hover:shadow-2xl transition-shadow duration-300 group flex flex-col justify-between"
-    >
-        <div class="flex flex-col items-center space-y-4">
-            <img
-                src="/images/Kristen.jpg"
-                alt="pretty blonde lady with HUGE brains"
-                class="cover w-48 h-48 object-cover rounded-full border-4 border-[#e8cf7c] drop-shadow-xl group-hover:scale-105 transition-transform duration-300"
-            />
-            <div class="text-center">
-                <h3 class="font-header text-xl tracking-tight">Kristen Swaim</h3>
-                <p class="font-subheader text-sm italic">Marketing Manager, Web Design</p>
-            </div>
-        </div>
-        <div class="text-sm font-body text-center mt-6">
-            <div class="flex justify-center flex-wrap gap-2 text-[#e8cf7c] text-lg font-subheader">
-                <a href="tel:8122432759" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                        <path
-                            d="M6.62 10.79a15.464 15.464 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.11-.21c1.12.45 2.33.69 3.58.69.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.62 22 2 13.38 2 3.5 2 2.95 2.45 2.5 3 2.5H6.5c.55 0 1 .45 1 1 0 1.25.24 2.46.69 3.58.15.39.06.84-.22 1.11l-2.2 2.2z"
-                        ></path>
-                    </svg>
-                    <span>812-243-2759</span>
-                </a>
-                <a href="mailto:info@monarchmediallc.com" class="flex items-center gap-2 hover:text-[#d05d97] underline transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8l8 5 8-5v10H4z"
-                        ></path>
-                    </svg>
-                    <span>info@monarchmediallc.com</span>
-                </a>
-            </div>
-        </div>
-    </div>
-</div> -->

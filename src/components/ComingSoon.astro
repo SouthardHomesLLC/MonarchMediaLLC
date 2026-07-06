@@ -1,40 +1,49 @@
-<div title="Coming Soon" class="pb-4 min-h-[70svh] flex flex-col items-center justify-center relative px-4">
+<div class="pb-4 min-h-[70svh] flex flex-col items-center justify-center relative px-4 select-none">
+    <!-- Darker, tighter background ambient light -->
     <div
         id="purpleblob"
-        class="absolute top-1/2 left-1/2 h-[100svh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#451a6b] blur-[80px] md:blur-[90px] opacity-100 z-0 w-full"
+        class="absolute top-1/2 left-1/2 h-[60vh] w-[60vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#451a6b] blur-[40px] opacity-40 z-0 pointer-events-none"
     >
     </div>
 
-    <div id="butterfly" role="img" class="brightness-80 absolute inset-0 bg-no-repeat bg-cover md:bg-contain bg-center bg-[url('/images/BgButterfly.svg')]">
+    <!-- Subdued, blended butterfly element -->
+    <div
+        id="butterfly"
+        role="img"
+        class="opacity-15 mix-blend-luminosity absolute inset-0 bg-no-repeat bg-cover md:bg-contain bg-center bg-[url('/images/BgButterfly.svg')] pointer-events-none"
+    >
     </div>
 
-    <img src="/images/MMLogo.svg" alt="Monarch Media logo" class="z-10 w-60 drop-shadow-[#e8cf7c]/80 drop-shadow-xl" />
+    <!-- Main Branding Assets -->
+    <img src="/images/MonarchPurple.png" alt="Monarch Media logo" class="z-10 w-48 mb-2 drop-shadow-2xl" />
+
     <h1
-        class="pb-4 text-center font-header text-5xl md:text-7xl lg:text-8xl font-bold drop-shadow-[#e8cf7c] drop-shadow-sm z-10 bg-gradient-to-br from-amber-100 to-yellow-500 bg-clip-text text-transparent"
+        class="pb-2 text-center font-header text-5xl md:text-7xl lg:text-8xl font-bold z-10 bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent tracking-tight"
     >
         Coming Soon
     </h1>
-    <p
-        id="services"
-        class="text-[#e8cf7c] text-shadow-[#451a6b] text-shadow-sm font-bold text-xl md:text-2xl lg:text-3xl z-10 font-header drop-shadow-sm pb-8 bg-gradient-to-br from-amber-100 to-yellow-500 bg-clip-text text-center"
-    >
-        Social Media | Marketing |
-        <span class="block sm:inline"> Web Design</span>
-    </p>
-    <p class="text-white text-center text-lg md:text-xl lg:text-2xl md:px-8 text-shadow-[#451a6b] text-shadow-lg z-10 font-subheader drop-shadow-sm pb-8">
-        Metamorphosis in progress! Follow us on <span class="font-semibold">Facebook</span>, <span class="font-semibold">Instagram</span>, or call (or email)
-        for special portfolio pricing.
+
+    <p id="services" class="text-gray-400 text-sm md:text-base uppercase tracking-[0.2em] z-10 font-body font-semibold pb-8 text-center">
+        Social Media <span class="text-[#451a6b]">|</span> Marketing <span class="text-[#451a6b]">|</span> Web Design
     </p>
 
-    <div class="flex items-center gap-6 z-10 drop-shadow-sm">
+    <p class="text-gray-300 text-center text-base md:text-lg max-w-xl z-10 font-body pb-8 leading-relaxed">
+        Metamorphosis in progress. Follow us on <span class="text-white font-semibold">Facebook</span> and <span class="text-white font-semibold"
+            >Instagram</span
+        >, or reach out directly for special portfolio pricing.
+    </p>
+
+    <!-- Social Layout -->
+    <div class="flex items-center gap-6 z-10">
         <!-- Facebook -->
         <a
-            class="text-white hover:text-[#e8cf7c]"
+            class="text-gray-400 hover:text-white hover:scale-110 transition-all"
             href="https://www.facebook.com/61576070392012/"
             aria-label="Visit Monarch Media LLC's Facebook"
             target="_blank"
+            title="Visit Facebook"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="m-0 p-0 h-8">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="h-6">
                 <path
                     fill="currentColor"
                     d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
@@ -44,12 +53,13 @@
 
         <!-- Instagram -->
         <a
-            class="text-white hover:text-[#e8cf7c]"
+            class="text-gray-400 hover:text-white hover:scale-110 transition-all"
             aria-label="Visit Monarch Media LLC's Instagram"
             href="https://www.instagram.com/monarchmedia.llc"
             target="_blank"
+            title="Visit Instagram"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="m-0 p-0 h-8">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="h-6">
                 <path
                     fill="currentColor"
                     d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
@@ -58,16 +68,21 @@
         </a>
 
         <!-- Email -->
-        <a class="text-white hover:text-[#e8cf7c]" href="mailto:info@monarchmediallc.com" aria-label="Email Monarch Media">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" class="m-0 p-0" viewBox="0 0 24 24"
+        <a
+            class="text-gray-400 hover:text-white hover:scale-110 transition-all"
+            href="mailto:info@monarchmediallc.com"
+            aria-label="Email Monarch Media"
+            title="Email Us"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"
                 ><path fill="currentColor" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 4l-8 5l-8-5V6l8 5l8-5z"
                 ></path></svg
             >
         </a>
 
         <!-- Phone -->
-        <a class="text-white hover:text-[#e8cf7c]" href="tel:8122432759" aria-label="Call Monarch Media">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" class="m-0 p-0" viewBox="0 0 512 512"
+        <a class="text-gray-400 hover:text-white hover:scale-110 transition-all" href="tel:8122432759" aria-label="Call Monarch Media" title="Call Us">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 512 512"
                 ><path
                     fill="currentColor"
                     d="M391 480c-19.52 0-46.94-7.06-88-30c-49.93-28-88.55-53.85-138.21-103.38C116.91 298.77 93.61 267.79 61 208.45c-36.84-67-30.56-102.12-23.54-117.13C45.82 73.38 58.16 62.65 74.11 52a176.3 176.3 0 0 1 28.64-15.2c1-.43 1.93-.84 2.76-1.21c4.95-2.23 12.45-5.6 21.95-2c6.34 2.38 12 7.25 20.86 16c18.17 17.92 43 57.83 52.16 77.43c6.15 13.21 10.22 21.93 10.23 31.71c0 11.45-5.76 20.28-12.75 29.81c-1.31 1.79-2.61 3.5-3.87 5.16c-7.61 10-9.28 12.89-8.18 18.05c2.23 10.37 18.86 41.24 46.19 68.51s57.31 42.85 67.72 45.07c5.38 1.15 8.33-.59 18.65-8.47c1.48-1.13 3-2.3 4.59-3.47c10.66-7.93 19.08-13.54 30.26-13.54h.06c9.73 0 18.06 4.22 31.86 11.18c18 9.08 59.11 33.59 77.14 51.78c8.77 8.84 13.66 14.48 16.05 20.81c3.6 9.53.21 17-2 22c-.37.83-.78 1.74-1.21 2.75a176.5 176.5 0 0 1-15.29 28.58c-10.63 15.9-21.4 28.21-39.38 36.58A67.4 67.4 0 0 1 391 480"
@@ -76,20 +91,3 @@
         </a>
     </div>
 </div>
-
-<style>
-    #butterfly {
-        width: 100%;
-        padding: 0 !important;
-        margin: 0 !important;
-        background-position: center;
-    }
-
-    #purpleblob {
-        width: 90vh;
-        height: 90vh;
-        padding: 0 !important;
-        margin: 0 !important;
-        background-position: center;
-    }
-</style>

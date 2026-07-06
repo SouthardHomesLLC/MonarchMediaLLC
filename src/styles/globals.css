@@ -6,16 +6,10 @@
     --font-body: 'Inter Variable', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --font-decorative: 'Eyesome Script', serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --color-primary: #451a6b;
-    --color-secondary: #d05d97;
+    --color-secondary: #020001;
     --color-primary-content: white;
     --color-header: #e8cf7c;
     --color-complementary: #88457c;
-    /* --background-image-noise: linear-gradient(
-            to bottom,
-            color-mix(in oklab, var(--color-gray-950) 0%, transparent),
-            color-mix(in oklab, var(--color-gray-950) 100%, transparent)
-        ),
-        url('/images/noise.png'); */
 }
 
 @font-face {
@@ -37,29 +31,6 @@
     src: url('/fonts/Eyesome Script.otf') format('truetype');
     font-weight: normal;
     font-style: normal;
-}
-
-@layer base {
-    /* h1 {
-        @apply text-4xl font-bold tracking-tight sm:text-5xl;
-    }
-
-    h2 {
-        @apply text-2xl font-bold sm:text-3xl;
-    }
-
-    a:not(.btn) {
-        @apply underline transition hover:opacity-80;
-    }
-
-    pre {
-        @apply p-6 overflow-x-auto rounded-lg;
-    }
-
-    :not(pre) > code {
-        @apply px-1 py-0.5 font-mono rounded bg-gray-900 text-primary;
-        font-size: 0.9em;
-    } */
 }
 
 @layer components {
@@ -104,13 +75,13 @@
 }
 
 html {
-    background: linear-gradient(to bottom, #d05d97 0%, #451a6b 100%);
-    transition: background 0.5s ease;
+    background: linear-gradient(to bottom, #09090b 0%, #111116 50%, #1c122c 100%);
+    background-attachment: fixed;
 }
 
 @media (max-width: 639px) {
     html {
-        background: linear-gradient(to bottom, #451a6b 20%, #d05d97 100%);
+        background: linear-gradient(to bottom, #1c122c 0%, #09090b 100%);
     }
 }
 
