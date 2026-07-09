@@ -3,7 +3,7 @@
 import Layout from '@layouts/Layout.astro';
 export const prerender = false;
 
-// Authenticate session check
+//Authenticate session check
 if (!Astro.cookies.has('admin_token')) {
     return Astro.redirect('/admin/login');
 }
@@ -14,7 +14,7 @@ if (!Astro.cookies.has('admin_token')) {
 const GOATCOUNTER_SUBDOMAIN = 'Felker12';
 const BASE_URL = `https://${GOATCOUNTER_SUBDOMAIN}.goatcounter.com/counter//.json`;
 
-// Define a helper to securely fetch ranges
+//Define a helper to securely fetch ranges
 async function fetchViews(params = '') {
     try {
         const response = await fetch(`${BASE_URL}${params}`);
@@ -26,7 +26,7 @@ async function fetchViews(params = '') {
     }
 }
 
-// Fetch stats in parallel to maintain rapid page speeds
+//Fetch stats in parallel to maintain rapid page speeds
 const [viewsToday, viewsWeek, viewsMonth, viewsYear] = await Promise.all([
     fetchViews('?start=today'),
     fetchViews('?start=week'),
