@@ -5,17 +5,17 @@ import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
 
 interface Props {
-    title: string;
+    title?: string;
 }
 
 const { title } = Astro.props;
+const displayTitle = title ? `${title} | Monarch Media LLC` : 'Monarch Media LLC | Social Media, Marketing & Web Design';
 ---
 
 <!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <!-- Faded page load-in -->
         <style>
             body {
                 animation: fadeInAnimation ease 3s;
@@ -32,29 +32,26 @@ const { title } = Astro.props;
                 }
             }
         </style>
-        <!-- Primary Meta Tags -->
-        <title>Monarch Media LLC | Social Media, Marketing & Web Design</title>
-        <meta name="title" content="Monarch Media LLC | Social Media, Marketing & Web Design" />
+        <title>{displayTitle}</title>
+        <meta name="title" content={displayTitle} />
         <meta
             name="description"
             content="Stand out with bold web design, branding, and marketing services with Monarch Media LLC. Serving Terre Haute and the Wabash Valley."
         />
         <link rel="canonical" href="https://monarchmediallc.com" />
 
-        <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://monarchmediallc.com" />
-        <meta property="og:title" content="Monarch Media LLC | Social Media, Marketing & Web Design" />
+        <meta property="og:title" content={displayTitle} />
         <meta
             property="og:description"
             content="Stand out with bold web design, branding, and marketing services with Monarch Media LLC. Serving Terre Haute and the Wabash Valley."
         />
         <meta property="og:image" content="/images/ogbanner.png" />
 
-        <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://monarchmediallc.com" />
-        <meta property="twitter:title" content="Monarch Media LLC | Social Media, Marketing & Web Design" />
+        <meta property="twitter:title" content={displayTitle} />
         <meta
             property="twitter:description"
             content="Stand out with bold web design, branding, and marketing services with Monarch Media LLC. Serving Terre Haute and the Wabash Valley."
@@ -69,7 +66,6 @@ const { title } = Astro.props;
         <meta name="generator" content={Astro.generator} />
         <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
 
-        <!-- GoatCounter -->
         <script is:inline data-goatcounter="https://monarchmediallc.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     </head>
 
