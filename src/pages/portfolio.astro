@@ -1,5 +1,6 @@
 ---
-export const prerender = false; //Tells Netlify to fetch from the DB at runtime on every page hit
+// src/pages/portfolio.astro
+export const prerender = false; // Tells Netlify to fetch from the DB at runtime on every page hit
 
 import Layout from '@layouts/Layout.astro';
 import type { ProjectItem } from '@data/ProjectData';
@@ -11,17 +12,15 @@ let projects: ProjectItem[] | null = null;
 let error = false;
 
 try {
-    //Hits your Azure controller endpoint
+    // Hits your public Azure controller endpoint safely
     const response = await fetch(`${API_BASE_URL}/api/projects`);
 
     if (!response.ok) {
         throw new Error(`API returned status: ${response.status}`);
     }
 
-    const rawData = (await response.json()) as ProjectItem[];
-
-    //Client-side sort fallback just in case API hasn't enforced public visibility or custom ordering yet
-    projects = rawData.filter((p) => p.isPublic).sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
+    // The backend now securely includes and returns the SiteImage entity inside this array
+    projects = (await response.json()) as ProjectItem[];
 } catch (e) {
     console.error('Failed fetching projects from Azure API:', e);
     error = true;
@@ -65,7 +64,7 @@ try {
 
     const lightbox = new PhotoSwipeLightbox({
         gallery: '#photo-gallery',
-        //Target ONLY the anchor links containing the lightbox class
+        // Target ONLY the anchor links containing the lightbox class inside ProjectCard
         children: 'a.portfolio-lightbox-trigger',
         pswpModule: () => import('photoswipe')
     });

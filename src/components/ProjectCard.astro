@@ -7,6 +7,10 @@ interface Props {
 }
 
 const { project } = Astro.props;
+
+// Safely pull the publicUrl from the nested object returned by your Azure backend payload
+const imageUrl = project.siteImage?.publicUrl;
+const imageAlt = project.title || 'Showcase Project Image';
 ---
 
 <div
@@ -26,9 +30,9 @@ const { project } = Astro.props;
 
     <div class="relative overflow-hidden aspect-video w-full border-b border-white/5 bg-[#1a1a1e]">
         {
-            project.imagePath ? (
+            imageUrl ? (
                 <a
-                    href={project.imagePath}
+                    href={imageUrl}
                     data-pswp-width="1920"
                     data-pswp-height="1080"
                     target="_blank"
@@ -36,10 +40,11 @@ const { project } = Astro.props;
                     class="portfolio-lightbox-trigger block w-full h-full cursor-zoom-in"
                 >
                     <img
-                        src={project.imagePath}
-                        alt={project.imageAlt || `Showcase for ${project.title}`}
+                        src={imageUrl}
+                        alt={imageAlt}
                         class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                         loading="lazy"
+                        decoding="async"
                     />
                 </a>
             ) : (

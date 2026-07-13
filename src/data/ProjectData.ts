@@ -2,7 +2,7 @@ export interface SiteImageItem {
     id: number;
     fileName: string;
     storagePath: string;
-    altText: string | null;
+    altText?: string;
     publicUrl: string;
     createdAtUtc: string;
 }
@@ -11,21 +11,17 @@ export interface ProjectItem {
     id: number;
     title: string;
     description: string;
-    techStack: string | null;
-    liveUrl: string | null;
-
-    //DB relation mapping for site image
-    siteImageId: number | null;
-    siteImage: SiteImageItem | null;
-    imageAlt: string | null; // Available if mapped explicitly via ToDto() extension layers
-
-    package: number; // Maps to PackageType enum integers (0 = Core, 1 = Professional, 2 = Premium)
+    techStack?: string;
+    liveUrl?: string;
+    siteImageId?: number;
+    siteImage?: SiteImageItem; // Nested object matching SiteImageDto
+    package: number;
     featured: boolean;
     displayOrder: number;
-    completedOn: string | null;
+    completedOn?: string;
     isPublic: boolean;
-    industry: number; // Maps to Industry enum integers
-    clientName: string | null;
+    industry: number;
+    clientName?: string;
 }
 
 export interface Database {
