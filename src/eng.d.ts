@@ -5,3 +5,9 @@ interface Window {
         allow_local?: boolean;
     };
 }
+
+declare namespace App {
+    interface Locals {
+        isLoggedIn: boolean;
+    }
+}

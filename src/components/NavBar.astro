@@ -1,15 +1,5 @@
 ---
-export const prerender = false;
-
-const isLoggedIn = Astro.cookies.has('admin_token');
-
-//Capture the current path so the logout endpoint knows where to return the user
-const currentPath = Astro.url.pathname;
-const isCurrentPageAdmin = currentPath.startsWith('/admin');
-const safeRedirectPath = isCurrentPageAdmin ? '/' : currentPath;
-
-//Point directly to lightweight API route
-const logoutHref = `/api/admin/logout?redirect=${encodeURIComponent(safeRedirectPath)}`;
+// src/components/Navbar.astro
 
 const publicItems = [
     { linkText: 'Home', href: '/' },
@@ -22,15 +12,14 @@ const adminItems = [
     { linkText: 'Team', href: '/admin/team' }
 ];
 
-//Flat structure for mobile rendering
-const dynamicMobileItems = isLoggedIn ? [...publicItems, ...adminItems] : publicItems;
+// Read the secure state directly from Astro.locals provided by our middleware
+const { isLoggedIn } = Astro.locals;
 
-/**
- * Helper function to determine active class states.
- */
+const currentPath = Astro.url.pathname;
+const isCurrentPageAdmin = currentPath.startsWith('/admin');
+
 const getLinkClass = (href: string) => {
     const isCurrent = href === '/' ? currentPath === '/' : currentPath.startsWith(href);
-
     return isCurrent
         ? 'text-white bg-white/10 shadow-[inset_0_0_12px_rgba(255,255,255,0.05)] border-t border-white/5 font-semibold'
         : 'text-gray-400 hover:text-white hover:bg-white/5 active:bg-white/10';
@@ -38,51 +27,54 @@ const getLinkClass = (href: string) => {
 ---
 
 <nav class="flex items-center gap-4 sm:gap-6 relative">
-    <!-- Desktop List -->
     <ul class="hidden md:flex items-center gap-1 sm:gap-2 font-body text-sm font-medium tracking-wide">
-        {publicItems.map((item) => (
-            <li>
-                <a href={item.href} class={`inline-block px-3 py-2 rounded-lg transition-all duration-200 ${getLinkClass(item.href)}`}>
-                    {item.linkText}
-                </a>
-            </li>
-        ))}
+        {
+            publicItems.map((item) => (
+                <li>
+                    <a href={item.href} class={`inline-block px-3 py-2 rounded-lg transition-all duration-200 ${getLinkClass(item.href)}`}>
+                        {item.linkText}
+                    </a>
+                </li>
+            ))
+        }
 
-        <!-- Admin Dropdown for Desktop -->
-        {isLoggedIn && (
-            <li class="relative group py-2">
-                <button 
-                    type="button" 
-                    class={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer ${isCurrentPageAdmin ? 'text-white bg-white/10 font-semibold' : 'text-gray-400 group-hover:text-white'}`}
-                >
-                    Admin Pages
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 transition-transform duration-200 group-hover:rotate-180">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                    </svg>
-                </button>
-
-                <!-- Dropdown Menu Box -->
-                <div class="absolute left-0 top-full mt-1 w-48 bg-[#121214] border border-white/5 rounded-xl shadow-2xl p-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform scale-95 group-hover:scale-100 z-50 origin-top-left backdrop-blur-md">
-                    {adminItems.map((item) => (
-                        <a 
-                            href={item.href} 
-                            class={`block px-3 py-2 text-xs rounded-lg transition-all duration-150 ${getLinkClass(item.href)}`}
+        {
+            isLoggedIn && (
+                <li class="relative group py-2">
+                    <button
+                        type="button"
+                        class={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer ${isCurrentPageAdmin ? 'text-white bg-white/10 font-semibold' : 'text-gray-400 group-hover:text-white'}`}
+                    >
+                        Management
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="2.5"
+                            stroke="currentColor"
+                            class="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 transition-transform duration-200 group-hover:rotate-180"
                         >
-                            {item.linkText}
-                        </a>
-                    ))}
-                </div>
-            </li>
-        )}
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                    <div class="absolute left-0 top-full mt-1 w-48 bg-[#121214] border border-white/5 rounded-xl shadow-2xl p-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform scale-95 group-hover:scale-100 z-50 origin-top-left backdrop-blur-md">
+                        {adminItems.map((item) => (
+                            <a href={item.href} class={`block px-3 py-2 text-xs rounded-lg transition-all duration-150 ${getLinkClass(item.href)}`}>
+                                {item.linkText}
+                            </a>
+                        ))}
+                    </div>
+                </li>
+            )
+        }
     </ul>
 
-    <!-- Authentication Area -->
     <div class="hidden md:block">
         {
             isLoggedIn ? (
                 <a
-                    href={logoutHref}
-                    class="font-body text-sm font-semibold uppercase tracking-wider text-red-400 hover:text-red-300 px-3 py-2 rounded-lg hover:bg-red-500/5 transition-all"
+                    href="/api/admin/logout"
+                    class="font-body text-sm font-semibold uppercase tracking-wider text-red-400 hover:text-red-300 px-3 py-2 rounded-lg hover:bg-red-500/5 transition-all inline-block"
                 >
                     Logout
                 </a>
@@ -93,92 +85,4 @@ const getLinkClass = (href: string) => {
             )
         }
     </div>
-
-    <!-- Mobile Menu Toggle Button -->
-    <button
-        type="button"
-        id="mobile-menu-toggle"
-        class="md:hidden flex flex-col justify-between w-6 h-4 text-gray-400 hover:text-white transition-colors focus:outline-none z-50"
-        aria-label="Toggle navigation menu"
-    >
-        <span class="w-full h-0.5 bg-current rounded transition-all duration-300 origin-left target-line-1"></span>
-        <span class="w-full h-0.5 bg-current rounded transition-all duration-300 target-line-2"></span>
-        <span class="w-full h-full max-h-[2px] bg-current rounded transition-all duration-300 origin-left target-line-3"></span>
-    </button>
-
-    <!-- Mobile Navigation Panel -->
-    <div
-        id="mobile-navigation-panel"
-        class="md:hidden fixed inset-x-0 top-[4.5rem] bg-[#121214]/95 border-b border-b-white/5 backdrop-blur-md p-6 flex flex-col space-y-4 shadow-2xl z-40"
-    >
-        <ul class="flex flex-col space-y-2 font-body text-base font-medium tracking-wide">
-            {
-                dynamicMobileItems.map((item) => (
-                    <li>
-                        <a href={item.href} class={`block px-4 py-3 rounded-xl transition-all duration-200 ${getLinkClass(item.href)}`}>
-                            {item.linkText}
-                        </a>
-                    </li>
-                ))
-            }
-        </ul>
-
-        <div class="border-t border-white/5 pt-4">
-            {
-                isLoggedIn ? (
-                    <a
-                        href={logoutHref}
-                        class="block text-center font-body text-sm font-semibold uppercase tracking-wider text-red-400 hover:text-red-300 bg-red-500/10 border border-red-500/10 px-4 py-3 rounded-xl transition-all"
-                    >
-                        Logout
-                    </a>
-                ) : (
-                    <a
-                        href="/admin/login"
-                        class={`block text-center font-body text-sm font-medium border px-4 py-3 rounded-xl transition-all ${
-                            currentPath.startsWith('/admin/login')
-                                ? 'text-white bg-white/10 border-white/10'
-                                : 'text-gray-300 bg-white/5 border-white/5 hover:text-white'
-                        }`}
-                    >
-                        Admin
-                    </a>
-                )
-            }
-        </div>
-    </div>
 </nav>
-
-<script>
-    const toggleBtn = document.getElementById('mobile-menu-toggle');
-    const navPanel = document.getElementById('mobile-navigation-panel');
-
-    const line1 = toggleBtn?.querySelector('.target-line-1');
-    const line2 = toggleBtn?.querySelector('.target-line-2');
-    const line3 = toggleBtn?.querySelector('.target-line-3');
-
-    toggleBtn?.addEventListener('click', () => {
-        const isHidden = navPanel?.classList.contains('hidden');
-
-        if (isHidden) {
-            navPanel?.classList.remove('hidden');
-            line1?.classList.add('rotate-45', 'translate-x-[2px]', '-translate-y-[1px]');
-            line2?.classList.add('opacity-0');
-            line3?.classList.add('-rotate-45', 'translate-x-[2px]', 'translate-y-[1px]');
-        } else {
-            navPanel?.classList.add('hidden');
-            line1?.classList.remove('rotate-45', 'translate-x-[2px]', '-translate-y-[1px]');
-            line2?.classList.remove('opacity-0');
-            line3?.classList.remove('-rotate-45', 'translate-x-[2px]', 'translate-y-[1px]');
-        }
-    });
-
-    window.addEventListener('resize', () => {
-        if (window.innerWidth >= 768) {
-            navPanel?.classList.add('hidden');
-            line1?.classList.remove('rotate-45', 'translate-x-[2px]', '-translate-y-[1px]');
-            line2?.classList.remove('opacity-0');
-            line3?.classList.remove('-rotate-45', 'translate-x-[2px]', 'translate-y-[1px]');
-        }
-    });
-</script>

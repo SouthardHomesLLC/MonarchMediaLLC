@@ -1,8 +1,6 @@
 // src/data/projects.ts
 import type { APIRoute } from 'astro';
 
-export const prerender = false;
-
 export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     const token = cookies.get('admin_token')?.value;
     if (!token) {
