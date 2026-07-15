@@ -1,42 +1,47 @@
 ---
-interface TeamMember {
-    name: string;
-    title: string;
-    image: string;
-}
+import { Image } from 'astro:assets';
+import type { TeamMemberItem } from '@data/TeamData';
+import { fetchApi } from '@lib/api';
 
-const TeamMembers: TeamMember[] = [
-    {
-        name: 'Christa Summerville',
-        title: 'CEO, Marketing Executive',
-        image: '/images/christa.jpg'
-    },
-    {
-        name: 'Anthony Felker',
-        title: 'Web Developer',
-        image: '/images/Anthony.jpg'
-    }
-];
+let teamMembers: TeamMemberItem[] = [];
+
+try {
+    teamMembers = await fetchApi<TeamMemberItem[]>('/api/team');
+} catch (error) {
+    console.error('Failed to load team members:', error);
+}
 ---
 
 <div class="px-4 md:px-6 w-full max-w-screen overflow-x-hidden pb-16">
     <div class="flex flex-wrap justify-center gap-6">
         {
-            TeamMembers.map((member) => (
-                <div class="relative max-w-2xs w-full bg-[#121214] text-white rounded-2xl shadow-xl p-6 border border-white/5 hover:border-[#451a6b]/50 hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
-                    <div class="flex flex-col items-center space-y-4">
-                        <img
-                            src={member.image}
-                            alt={`Photo of ${member.name}`}
-                            class="w-44 h-44 object-cover rounded-full border-2 border-white/10 group-hover:border-[#451a6b] transition-all duration-300"
-                        />
-                        <div class="text-center">
-                            <h3 class="font-body font-bold text-lg tracking-tight text-white group-hover:text-gray-200 transition-colors">{member.name}</h3>
-                            <p class="font-body text-xs text-gray-400 mt-1 uppercase tracking-wider font-medium">{member.title}</p>
+            teamMembers.length === 0 ? (
+                <p class="text-sm italic text-gray-500">No team members available.</p>
+            ) : (
+                teamMembers.map((member) => (
+                    <div class="relative max-w-2xs w-full bg-[#121214] text-white rounded-2xl shadow-xl p-6 border border-white/5 hover:border-[#451a6b]/50 hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
+                        <div class="flex flex-col items-center space-y-4">
+                            {member.siteImage?.publicUrl ? (
+                                <Image
+                                    src={member.siteImage.publicUrl}
+                                    alt={member.siteImage.altText ?? `Photo of ${member.name}`}
+                                    width={320}
+                                    height={320}
+                                    class="w-44 h-44 object-cover rounded-full border-2 border-white/10 group-hover:border-[#451a6b] transition-all duration-300"
+                                />
+                            ) : (
+                                <div class="w-44 h-44 rounded-full border-2 border-white/10 flex items-center justify-center text-gray-500">No Image</div>
+                            )}
+
+                            <div class="text-center">
+                                <h3 class="font-body font-bold text-lg tracking-tight text-white group-hover:text-gray-200 transition-colors">{member.name}</h3>
+
+                                <p class="font-body text-xs text-gray-400 mt-1 uppercase tracking-wider font-medium">{member.title}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            ))
+                ))
+            )
         }
     </div>
 </div>

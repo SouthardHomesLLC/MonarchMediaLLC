@@ -1,57 +1,50 @@
 ---
-// src/pages/admin/team.astro
 import Layout from '@layouts/Layout.astro';
 import TeamMemberList from '@components/admin/TeamMemberList.astro';
 import TeamMemberForm from '@components/admin/TeamMemberForm.astro';
 import type { TeamMemberItem } from '@data/TeamData';
 import type { SiteImageItem } from '@data/ImageData';
+import { fetchApi } from '@lib/api';
 
 export const prerender = false;
 
-// Enforce session state check
 const token = Astro.cookies.get('admin_token')?.value;
+
 if (!token) {
     return Astro.redirect('/admin/login');
 }
 
 const successMessage = Astro.url.searchParams.get('success') || '';
-const errorMessage = Astro.url.searchParams.get('error') || '';
 
-const API_BASE_URL = import.meta.env.AZURE_API_URL;
+const errorMessage = Astro.url.searchParams.get('error') || '';
 
 let team: TeamMemberItem[] = [];
 let availableImages: SiteImageItem[] = [];
+let loadError = '';
+
+const authenticatedRequest: RequestInit = {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+};
 
 try {
-    // 1. Fetch current team members
-    const response = await fetch(`${API_BASE_URL}/api/admin/team`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-
-    if (response.ok) {
-        team = await response.json();
-    } else {
-        console.error(`Backend team fetch returned status code: ${response.status}`);
-    }
-
-    // 2. Fetch system images for linking assets
-    const imagesResponse = await fetch(`${API_BASE_URL}/api/admin/images`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
-    if (imagesResponse.ok) {
-        availableImages = await imagesResponse.json();
-    } else {
-        console.error(`Backend images fetch returned status code: ${imagesResponse.status}`);
-    }
-} catch (e) {
-    console.error('Data pull exception handled safely without crashing route:', e);
+    team = await fetchApi<TeamMemberItem[]>('/api/admin/team', authenticatedRequest);
+} catch (error) {
+    console.error('Failed to load team members:', error);
 }
 
-// Check if we are currently trying to edit a specific member
+try {
+    availableImages = await fetchApi<SiteImageItem[]>('/api/admin/images', authenticatedRequest);
+} catch (error) {
+    console.error('Failed to load images:', error);
+}
+
 const editTargetId = Astro.url.searchParams.get('edit');
-const memberToEdit = editTargetId ? team.find((m) => m.id === parseInt(editTargetId, 10)) : null;
+
+const parsedEditId = editTargetId ? Number.parseInt(editTargetId, 10) : null;
+
+const memberToEdit = parsedEditId !== null && Number.isInteger(parsedEditId) ? (team.find((member) => member.id === parsedEditId) ?? null) : null;
 ---
 
 <Layout title="Monarch Media | Manage Team">

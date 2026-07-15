@@ -1,36 +1,35 @@
 ---
 // src/pages/portfolio.astro
 import Layout from '@layouts/Layout.astro';
-import type { ProjectItem } from '@data/ProjectData';
 import ProjectCard from '@components/ProjectCard.astro';
+import type { ProjectItem } from '@data/ProjectData';
+import { fetchApi } from '@lib/api';
 
-const targetUrl = new URL('/api/projects', import.meta.env.AZURE_API_URL).href;
-
-let projects: ProjectItem[] | null = null;
+let projects: ProjectItem[] = [];
 let error = false;
 
 try {
-    const response = await fetch(targetUrl);
+    projects = await fetchApi<ProjectItem[]>('/api/projects');
+} catch (fetchError) {
+    console.error('Failed fetching projects from Azure API:', fetchError);
 
-    if (!response.ok) {
-        throw new Error(`API returned status: ${response.status}`);
-    }
-
-    projects = (await response.json()) as ProjectItem[];
-} catch (e) {
-    console.error('Failed fetching projects from Azure API:', e);
     error = true;
 }
 ---
 
-<Layout title="Monarch Media LLC | Portfolio">
+<Layout title="Portfolio">
     <div class="px-4 relative z-10 max-w-7xl mx-auto py-12 sm:py-16 min-h-[80svh]">
         <div class="text-center mb-12">
             <h1 class="pb-2 font-header text-4xl md:text-6xl font-bold bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent tracking-tight">
                 Our Portfolio
             </h1>
+
             <p class="text-gray-400 font-body text-sm uppercase tracking-[0.2em] font-semibold">
-                Social Media <span class="text-[#451a6b]">|</span> Marketing <span class="text-[#451a6b]">|</span> Web Design
+                Social Media
+                <span class="text-[#451a6b]">|</span>
+                Marketing
+                <span class="text-[#451a6b]">|</span>
+                Web Design
             </p>
         </div>
 
@@ -42,15 +41,17 @@ try {
             )
         }
 
+        {!error && projects.length === 0 && <p class="text-gray-400 font-body text-center py-12">No projects showcased just yet. Check back soon!</p>}
+
         {
-            !error && (!projects || projects.length === 0) && (
-                <p class="text-gray-400 font-body text-center py-12">No projects showcased just yet. Check back soon!</p>
+            !error && projects.length > 0 && (
+                <div id="photo-gallery" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center justify-center">
+                    {projects.map((project, index) => (
+                        <ProjectCard project={project} loading={index === 0 ? 'eager' : 'lazy'} />
+                    ))}
+                </div>
             )
         }
-
-        <div id="photo-gallery" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center justify-center">
-            {projects?.map((project, index) => <ProjectCard project={project} loading={index === 0 ? 'eager' : 'lazy'} />)}
-        </div>
     </div>
 </Layout>
 

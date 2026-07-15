@@ -5,55 +5,63 @@ import AddProjectForm from '@components/admin/AddProjectForm.astro';
 import ProjectList from '@components/admin/ProjectList.astro';
 import ProjectForm from '@components/admin/ProjectForm.astro';
 import type { ProjectItem } from '@data/ProjectData';
+import type { SiteImageItem } from '@data/ImageData';
+import { fetchApi } from '@lib/api';
 
 export const prerender = false;
 
 const token = Astro.cookies.get('admin_token')?.value;
+
 if (!token) {
     return Astro.redirect('/admin/login');
 }
 
 const successMessage = Astro.url.searchParams.get('success') || '';
+
 const errorMessage = Astro.url.searchParams.get('error') || '';
 
-//Check Astro's meta environment or fall back to standard process environments for server contexts
-const API_BASE_URL = import.meta.env.AZURE_API_URL || 'https://your-dotnet-app-service.azurewebsites.net';
-
 let projects: ProjectItem[] = [];
-let availableImages: any[] = [];
+let availableImages: SiteImageItem[] = [];
+
+let projectsLoadError = '';
+let imagesLoadError = '';
+
+const authenticatedRequest: RequestInit = {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+};
 
 try {
-    //Fetch Projects safely
-    const response = await fetch(`${API_BASE_URL}/api/admin/projects`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
-    if (response.ok) {
-        projects = await response.json();
-    } else {
-        console.error(`Backend project fetch returned status code: ${response.status}`);
-    }
+    projects = await fetchApi<ProjectItem[]>('/api/admin/projects', authenticatedRequest);
+} catch (error) {
+    console.error('Failed to load admin projects:', error);
 
-    //Fetch Site Images Library safely
-    const imagesResponse = await fetch(`${API_BASE_URL}/api/admin/images`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
-    if (imagesResponse.ok) {
-        availableImages = await imagesResponse.json();
-    } else {
-        console.error(`Backend images fetch returned status code: ${imagesResponse.status}`);
-    }
-} catch (e) {
-    console.error('Data pull exception handled safely without crashing route:', e);
+    projectsLoadError = error instanceof Error ? error.message : 'Unable to load projects.';
+}
+
+try {
+    availableImages = await fetchApi<SiteImageItem[]>('/api/admin/images', authenticatedRequest);
+} catch (error) {
+    console.error('Failed to load image library:', error);
+
+    imagesLoadError = error instanceof Error ? error.message : 'Unable to load image assets.';
 }
 
 const editTargetId = Astro.url.searchParams.get('edit');
-const projectToEdit = editTargetId ? projects.find((p) => p.id === parseInt(editTargetId, 10)) : null;
+
+const parsedEditId = editTargetId ? Number.parseInt(editTargetId, 10) : null;
+
+const projectToEdit = parsedEditId !== null && Number.isInteger(parsedEditId) ? (projects.find((project) => project.id === parsedEditId) ?? null) : null;
+
+const loadError = projectsLoadError || imagesLoadError;
 ---
 
-<Layout title="Monarch Media | Manage Projects">
+<Layout title="Manage Projects">
     <main class="max-w-4xl mx-auto px-4 py-12 text-white space-y-12">
         <div>
             <h1 class="font-header text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent tracking-tight">Project Manager</h1>
+
             <p class="text-gray-400 font-body text-sm mt-1">Create and manage portfolio showcase assets.</p>
         </div>
 
@@ -64,9 +72,12 @@ const projectToEdit = editTargetId ? projects.find((p) => p.id === parseInt(edit
                 </div>
             )
         }
+
         {
-            errorMessage && !projectToEdit && (
-                <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-red-400 font-body text-sm font-medium text-center">{errorMessage}</div>
+            (errorMessage || loadError) && !projectToEdit && (
+                <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-red-400 font-body text-sm font-medium text-center">
+                    {errorMessage || loadError}
+                </div>
             )
         }
 

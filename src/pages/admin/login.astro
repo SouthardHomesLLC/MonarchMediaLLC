@@ -6,70 +6,106 @@ import type { LoginResponse } from '@data/AuthData';
 
 const API_BASE_URL = import.meta.env.AZURE_API_URL;
 
+const existingToken = Astro.cookies.get('admin_token')?.value;
+
+if (existingToken && Astro.request.method === 'GET') {
+    return Astro.redirect('/admin/dashboard');
+}
+
 let errorMessage = '';
 let usernameValue = '';
 
 if (Astro.request.method === 'POST') {
-    try {
-        const formData = await Astro.request.formData();
-        const username = formData.get('username')?.toString().trim();
-        const password = formData.get('password')?.toString();
+    if (!API_BASE_URL) {
+        console.error('AZURE_API_URL is not configured.');
 
-        if (username) usernameValue = username;
+        errorMessage = 'The authentication service is not configured.';
+    } else {
+        try {
+            const formData = await Astro.request.formData();
 
-        if (!username || !password) {
-            errorMessage = 'Please enter both username and password.';
-        } else {
-            const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
+            const username = formData.get('username')?.toString().trim() ?? '';
 
-            if (response.ok) {
-                //Strictly type the response mapping to C# LoginResponse DTO
-                const data = (await response.json()) as LoginResponse;
+            const password = formData.get('password')?.toString() ?? '';
 
-                //Extract the token safely
-                const token = data.token;
+            usernameValue = username;
 
-                //Place it in a secure HttpOnly cookie wrapper
-                Astro.cookies.set('admin_token', token, {
-                    path: '/',
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: 'strict',
-                    maxAge: 60 * 60 * 2 //2 hour expiration
+            if (!username || !password) {
+                errorMessage = 'Please enter both username and password.';
+            } else {
+                const loginUrl = new URL('/api/auth/login', API_BASE_URL);
+
+                const response = await fetch(loginUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password
+                    })
                 });
 
-                return Astro.redirect('/admin/dashboard');
-            } else if (response.status === 401) {
-                //Catches your controller's direct return Unauthorized("...") responses
-                errorMessage = 'Invalid username or password.';
-            } else {
-                errorMessage = 'An error occurred on the server. Please try again.';
+                if (response.ok) {
+                    const data = (await response.json()) as LoginResponse;
+
+                    if (!data.token) {
+                        throw new Error('The login response did not contain a token.');
+                    }
+
+                    const parsedExpiration = new Date(data.expiresAtUtc);
+
+                    const expiresAt = Number.isNaN(parsedExpiration.getTime()) ? new Date(Date.now() + 2 * 60 * 60 * 1000) : parsedExpiration;
+
+                    Astro.cookies.set('admin_token', data.token, {
+                        path: '/',
+                        httpOnly: true,
+
+                        // localhost normally uses HTTP.
+                        secure: import.meta.env.PROD,
+
+                        sameSite: 'strict',
+                        expires: expiresAt
+                    });
+
+                    return Astro.redirect('/admin/dashboard');
+                }
+
+                if (response.status === 401) {
+                    errorMessage = 'Invalid username or password.';
+                } else if (response.status === 429) {
+                    errorMessage = 'Too many login attempts. Please wait and try again.';
+                } else {
+                    const responseText = await response.text();
+
+                    console.error(`Login API returned ${response.status}:`, responseText);
+
+                    errorMessage = 'An error occurred on the server. Please try again.';
+                }
             }
+        } catch (error) {
+            console.error('Login submission error:', error);
+
+            errorMessage = 'Unable to connect to the authentication service.';
         }
-    } catch (error) {
-        console.error('Login submission error:', error);
-        errorMessage = 'Unable to connect to the authentication service.';
     }
 }
 ---
 
-<Layout title="Monarch Media LLC | Admin Login">
-    <div class="px-4 relative z-10 max-w-md mx-auto py-24 min-h-[80svh] flex flex-col justify-center">
-        <div class="bg-[#121214] border border-white/5 rounded-2xl p-8 shadow-2xl shadow-[#451a6b]/5">
-            <div class="text-center mb-6">
+<Layout title="Admin Login">
+    <main class="px-4 relative z-10 max-w-md mx-auto py-24 min-h-[80svh] flex flex-col justify-center">
+        <section class="bg-[#121214] border border-white/5 rounded-2xl p-8 shadow-2xl shadow-[#451a6b]/5">
+            <header class="text-center mb-6">
                 <h1 class="font-header text-3xl font-bold bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent tracking-tight">
                     Admin Portal
                 </h1>
-                <p class="text-gray-400 font-body text-xs uppercase tracking-wider pt-1">Sign in to manage portfolio assets</p>
-            </div>
+
+                <p class="text-gray-400 font-body text-xs uppercase tracking-wider pt-1">Sign in to manage site content</p>
+            </header>
 
             {
                 errorMessage && (
-                    <div class="mb-4 bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-center">
+                    <div class="mb-4 bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-center" role="alert" aria-live="polite">
                         <p class="text-red-400 font-body text-sm font-medium">{errorMessage}</p>
                     </div>
                 )
@@ -78,38 +114,41 @@ if (Astro.request.method === 'POST') {
             <form method="POST" class="space-y-4">
                 <div>
                     <label for="username" class="block text-gray-400 font-body text-xs font-semibold uppercase tracking-wider mb-2"> Username </label>
+
                     <input
                         type="text"
                         id="username"
                         name="username"
                         value={usernameValue}
                         required
-                        class="w-full bg-[#1a1a1e] border border-white/5 rounded-xl px-4 py-3 text-white font-body text-sm focus:outline-none focus:border-[#451a6b]/60 transition-colors"
+                        autofocus
                         autocomplete="username"
+                        class="w-full bg-[#1a1a1e] border border-white/5 rounded-xl px-4 py-3 text-white font-body text-sm focus:outline-none focus:border-[#451a6b]/60 transition-colors"
                     />
                 </div>
 
                 <div>
                     <label for="password" class="block text-gray-400 font-body text-xs font-semibold uppercase tracking-wider mb-2"> Password </label>
+
                     <input
                         type="password"
                         id="password"
                         name="password"
                         required
-                        class="w-full bg-[#1a1a1e] border border-white/5 rounded-xl px-4 py-3 text-white font-body text-sm focus:outline-none focus:border-[#451a6b]/60 transition-colors"
                         autocomplete="current-password"
+                        class="w-full bg-[#1a1a1e] border border-white/5 rounded-xl px-4 py-3 text-white font-body text-sm focus:outline-none focus:border-[#451a6b]/60 transition-colors"
                     />
                 </div>
 
                 <div class="pt-2">
                     <button
                         type="submit"
-                        class="w-full bg-gradient-to-r from-[#451a6b] to-[#63289a] hover:from-[#52207e] hover:to-[#7430b2] text-white font-body font-semibold text-sm uppercase tracking-wider py-3 rounded-xl transition-all shadow-md active:scale-[0.99]"
+                        class="w-full bg-gradient-to-r from-[#451a6b] to-[#63289a] hover:from-[#52207e] hover:to-[#7430b2] text-white font-body font-semibold text-sm uppercase tracking-wider py-3 rounded-xl transition-all shadow-md active:scale-[0.99] cursor-pointer"
                     >
                         Login
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
+        </section>
+    </main>
 </Layout>
