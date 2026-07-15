@@ -8,7 +8,11 @@ export default defineConfig({
         plugins: [tailwindcss()]
     },
     output: 'static',
-    adapter: netlify(),
+
+    adapter: netlify({
+        imageCDN: false, //Ensure that images are actually being optimized at build time not site load time
+    }),
+
     image: { 
         domains: ['epurfjikrqmjfjrdnuyy.supabase.co']
     }
