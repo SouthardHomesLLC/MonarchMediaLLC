@@ -1,4 +1,4 @@
-// src/data/projects.ts
+// src/pages/api/admin/projects.ts
 import type { APIRoute } from 'astro';
 export const prerender = false;
 

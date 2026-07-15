@@ -1,4 +1,4 @@
-// src/pages/admin/logout.ts
+// src/pages/api/admin/logout.ts
 import type { APIRoute } from 'astro';
 export const prerender = false;
 

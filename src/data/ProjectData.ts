@@ -1,11 +1,4 @@
-export interface SiteImageItem {
-    id: number;
-    fileName: string;
-    storagePath: string;
-    altText?: string;
-    publicUrl: string;
-    createdAtUtc: string;
-}
+import type { SiteImageItem } from '@data/ImageData'
 
 export interface ProjectItem {
     id: number;
@@ -33,5 +26,3 @@ export interface Database {
         };
     };
 }
-
-

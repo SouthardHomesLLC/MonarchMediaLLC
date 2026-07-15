@@ -1,0 +1,147 @@
+---
+// src/components/admin/TeamMemberList.astro
+import { Image } from 'astro:assets';
+import type { TeamMemberItem } from '@data/TeamData';
+
+interface Props {
+    team: TeamMemberItem[];
+}
+
+const { team } = Astro.props;
+---
+
+<section class="space-y-4">
+    <h2 class="font-header text-xl font-bold text-white border-b border-white/5 pb-2">
+        Active Team Members ({team.length})
+    </h2>
+
+    <div class="bg-[#121214] border border-white/5 rounded-2xl overflow-hidden shadow-xl">
+        {
+            team.length === 0 ? (
+                <p class="p-8 text-center text-gray-500 font-body text-sm italic">No team members returned from the database.</p>
+            ) : (
+                <div class="divide-y divide-white/5">
+                    {team.map((member) => (
+                        <article class="py-5 px-6 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-white/[0.015] transition-all duration-200 gap-6 group">
+                            <div class="flex items-center gap-5 min-w-0 flex-1">
+                                <div class="w-14 h-14 bg-[#1a1a1e] rounded-full border border-white/10 overflow-hidden flex-shrink-0 flex items-center justify-center shadow-md group-hover:border-white/20 transition-colors">
+                                    {member.siteImage?.publicUrl ? (
+                                        <Image
+                                            src={member.siteImage.publicUrl}
+                                            alt={member.siteImage.altText || member.name}
+                                            width={112}
+                                            height={112}
+                                            class="w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        <span class="text-[10px] text-gray-600 italic">No Img</span>
+                                    )}
+                                </div>
+
+                                <div class="min-w-0 flex-1">
+                                    <h3 class="font-body font-bold text-base text-white truncate tracking-tight">{member.name}</h3>
+
+                                    <p class="text-xs text-gray-400 font-body mt-0.5 truncate">{member.title}</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2.5 self-end sm:self-auto">
+                                <a
+                                    href={`?edit=${member.id}`}
+                                    class="text-xs bg-white/5 hover:bg-white/10 border border-white/5 text-gray-300 font-body px-3.5 py-2 rounded-xl transition-all"
+                                >
+                                    Edit
+                                </a>
+
+                                <button
+                                    type="button"
+                                    data-delete-id={member.id}
+                                    class="delete-member-btn text-xs bg-red-500/10 hover:bg-red-500/20 disabled:opacity-60 disabled:cursor-not-allowed border border-red-500/20 text-red-400 font-body px-3.5 py-2 rounded-xl transition-all cursor-pointer"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            )
+        }
+    </div>
+</section>
+
+<script is:inline>
+    {
+        async function getErrorMessage(response) {
+            const responseText = await response.text();
+
+            if (!responseText) {
+                return 'Unable to delete team member.';
+            }
+
+            try {
+                const data = JSON.parse(responseText);
+
+                return data.error ?? data.message ?? responseText;
+            } catch {
+                return responseText;
+            }
+        }
+
+        document.addEventListener('click', async (event) => {
+            const target = event.target;
+
+            if (!(target instanceof Element)) {
+                return;
+            }
+
+            const button = target.closest('.delete-member-btn');
+
+            if (!(button instanceof HTMLButtonElement)) {
+                return;
+            }
+
+            const memberId = button.dataset.deleteId;
+
+            if (!memberId) {
+                alert('The team member ID was missing.');
+                return;
+            }
+
+            const confirmed = window.confirm('Are you sure you want to permanently delete this team member? This cannot be undone.');
+
+            if (!confirmed) {
+                return;
+            }
+
+            const originalText = button.innerText;
+
+            button.disabled = true;
+            button.innerText = 'Deleting...';
+
+            try {
+                const response = await fetch(`/api/admin/team/${memberId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    const errorMessage = await getErrorMessage(response);
+
+                    alert(errorMessage);
+
+                    button.disabled = false;
+                    button.innerText = originalText;
+                    return;
+                }
+
+                window.location.href = `${window.location.pathname}?success=Team+member+deleted+successfully!`;
+            } catch (error) {
+                console.error('Team member deletion failed:', error);
+
+                alert('Network error trying to delete the team member.');
+
+                button.disabled = false;
+                button.innerText = originalText;
+            }
+        });
+    }
+</script>

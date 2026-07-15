@@ -1,0 +1,208 @@
+---
+// src/components/admin/TeamMemberForm.astro
+import type { SiteImageItem } from '@data/ImageData';
+import type { TeamMemberItem } from '@data/TeamData';
+
+interface Props {
+    member?: TeamMemberItem | null;
+    images: SiteImageItem[];
+}
+
+const { member = null, images = [] } = Astro.props;
+const isEditing = member !== null;
+---
+
+<dialog id="team-member-modal" class="backdrop:bg-black/60 backdrop:backdrop-blur-sm bg-transparent w-full max-w-lg p-4 focus:outline-none">
+    <section class="bg-[#121214] border border-white/10 rounded-2xl p-6 shadow-2xl text-white">
+        <div class="flex items-center justify-between mb-6 border-b border-white/5 pb-3">
+            <h2
+                id="modal-title-text"
+                class="font-header text-xl font-bold bg-gradient-to-r from-purple-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent"
+            >
+                {isEditing ? `Edit Member: ${member.name}` : 'Add New Team Member'}
+            </h2>
+
+            <button
+                type="button"
+                id="close-modal-btn"
+                class="text-gray-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/5 text-xs font-body font-medium cursor-pointer"
+            >
+                Close
+            </button>
+        </div>
+
+        <form id="team-member-form" method="POST" action="/api/admin/team" class="space-y-6">
+            <input type="hidden" id="member-id" name="id" value={member?.id ?? ''} />
+
+            <div>
+                <label for="member-name" class="block text-gray-400 font-body text-xs font-semibold uppercase tracking-wider mb-2"> Full Name * </label>
+
+                <input
+                    type="text"
+                    id="member-name"
+                    name="name"
+                    required
+                    value={member?.name ?? ''}
+                    class="w-full bg-[#1a1a1e] border border-white/5 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-purple-500/60 transition-colors"
+                />
+            </div>
+
+            <div>
+                <label for="member-title" class="block text-gray-400 font-body text-xs font-semibold uppercase tracking-wider mb-2"> Job Title / Role * </label>
+
+                <input
+                    type="text"
+                    id="member-title"
+                    name="title"
+                    required
+                    value={member?.title ?? ''}
+                    class="w-full bg-[#1a1a1e] border border-white/5 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-purple-500/60 transition-colors"
+                />
+            </div>
+
+            <div>
+                <label for="member-image-select" class="block text-gray-400 font-body text-xs font-semibold uppercase tracking-wider mb-2">
+                    Link Profile Image
+                </label>
+
+                <select
+                    id="member-image-select"
+                    name="siteImageId"
+                    class="w-full bg-[#1a1a1e] border border-white/5 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-purple-500/60 transition-colors"
+                >
+                    <option value="" selected={member?.siteImageId == null}> -- No Image Linked -- </option>
+
+                    {
+                        images.map((image) => (
+                            <option value={image.id} selected={member?.siteImageId === image.id}>
+                                {image.fileName}
+                                {image.altText ? ` (${image.altText})` : ''}
+                            </option>
+                        ))
+                    }
+                </select>
+            </div>
+
+            <div class="pt-4 border-t border-white/5 flex justify-end">
+                <button
+                    type="submit"
+                    id="submit-form-btn"
+                    class="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:opacity-60 disabled:cursor-not-allowed text-white font-body font-semibold text-xs uppercase tracking-wider px-6 py-3 rounded-xl transition-all active:scale-[0.99] cursor-pointer"
+                >
+                    {isEditing ? 'Save Changes' : 'Create Record'}
+                </button>
+            </div>
+        </form>
+    </section>
+</dialog>
+
+<script is:inline>
+    {
+        const memberForm = document.getElementById('team-member-form');
+
+        const memberDialog = document.getElementById('team-member-modal');
+
+        const memberCloseButton = document.getElementById('close-modal-btn');
+
+        const memberSubmitButton = document.getElementById('submit-form-btn');
+
+        async function getTeamFormErrorMessage(response) {
+            const responseText = await response.text();
+
+            if (!responseText) {
+                return 'Server error';
+            }
+
+            try {
+                const data = JSON.parse(responseText);
+
+                return data.error ?? data.message ?? responseText;
+            } catch {
+                return responseText;
+            }
+        }
+
+        memberForm?.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            if (!(memberForm instanceof HTMLFormElement)) {
+                return;
+            }
+
+            if (memberSubmitButton instanceof HTMLButtonElement) {
+                memberSubmitButton.disabled = true;
+                memberSubmitButton.textContent = 'Processing...';
+            }
+
+            const formData = new FormData(memberForm);
+
+            const data = {};
+
+            formData.forEach((value, key) => {
+                if (key === 'id') {
+                    data[key] = value ? Number.parseInt(String(value), 10) : 0;
+                } else if (key === 'siteImageId') {
+                    data[key] = value ? Number.parseInt(String(value), 10) : null;
+                } else {
+                    data[key] = String(value).trim();
+                }
+            });
+
+            const isUpdate = typeof data.id === 'number' && data.id > 0;
+
+            const memberId = data.id;
+
+            const requestUrl = isUpdate ? `/api/admin/team/${memberId}` : '/api/admin/team';
+
+            const method = isUpdate ? 'PUT' : 'POST';
+
+            delete data.id;
+
+            try {
+                const response = await fetch(requestUrl, {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    const errorMessage = await getTeamFormErrorMessage(response);
+
+                    alert(`Action failed: ${errorMessage}`);
+
+                    if (memberSubmitButton instanceof HTMLButtonElement) {
+                        memberSubmitButton.disabled = false;
+
+                        memberSubmitButton.textContent = isUpdate ? 'Save Changes' : 'Create Record';
+                    }
+
+                    return;
+                }
+
+                const message = isUpdate ? 'Team+member+updated+successfully!' : 'Team+member+created+successfully!';
+
+                window.location.href = `${window.location.pathname}?success=${message}`;
+            } catch (error) {
+                console.error('Team member request failed:', error);
+
+                alert('Network error encountered while saving the team member.');
+
+                if (memberSubmitButton instanceof HTMLButtonElement) {
+                    memberSubmitButton.disabled = false;
+
+                    memberSubmitButton.textContent = isUpdate ? 'Save Changes' : 'Create Record';
+                }
+            }
+        });
+
+        memberCloseButton?.addEventListener('click', () => {
+            if (memberDialog instanceof HTMLDialogElement) {
+                memberDialog.close();
+            }
+
+            window.history.replaceState({}, '', window.location.pathname);
+        });
+    }
+</script>
