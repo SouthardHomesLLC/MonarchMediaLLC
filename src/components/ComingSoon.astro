@@ -1,13 +1,20 @@
+---
+import { Image } from 'astro:assets';
+import logo from '@assets/MonarchPurple.png';
+---
+
 <div class="pb-4 min-h-[70svh] flex flex-col items-center justify-center relative px-4 select-none">
     <!-- Darker, tighter background ambient light -->
     <div
         id="purpleblob"
-        class="absolute top-1/2 left-1/2 h-[60vh] w-[60vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#451a6b] blur-[40px] opacity-40 z-0 pointer-events-none"
+        class="absolute top-1/2 left-1/2 h-[60vh] w-[60vh]
+            -translate-x-1/2 -translate-y-1/2 rounded-full
+            bg-[#451a6b] blur-[40px] opacity-40 z-0 pointer-events-none"
     >
     </div>
 
     <!-- Main Branding Assets -->
-    <img src="/images/MonarchPurple.png" alt="Monarch Media logo" class="z-10 w-48 mb-2 drop-shadow-2xl" />
+    <Image src={logo} alt="Monarch Media logo" class="z-10 w-48 mb-2 drop-shadow-2xl" />
 
     <h1
         class="pb-2 text-center font-header text-5xl md:text-7xl lg:text-8xl font-bold z-10 bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent tracking-tight"
@@ -19,11 +26,8 @@
         Social Media <span class="text-[#451a6b]">|</span> Marketing <span class="text-[#451a6b]">|</span> Web Design
     </p>
 
-    <p class="text-gray-300 text-center text-base md:text-lg max-w-xl z-10 font-body pb-8 leading-relaxed">
-        Metamorphosis in progress. Connect with us on
-        <span class="text-white font-semibold">Facebook</span> and <span class="text-white font-semibold">Instagram</span>, or contact us directly for exclusive
-        introductory pricing.
-    </p>
+    <p class="text-gray-300 text-center text-base
+        md:text-lg max-w-xl z-10 font-body pb-8 leading-relaxed">Metamorphosis in progress.</p>
 
     <!-- Social Layout -->
     <div class="flex items-center gap-6 z-10">
