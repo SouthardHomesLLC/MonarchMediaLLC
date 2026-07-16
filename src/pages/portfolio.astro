@@ -3,23 +3,49 @@
 import Layout from '@layouts/Layout.astro';
 import ProjectCard from '@components/ProjectCard.astro';
 import type { ProjectItem } from '@data/ProjectData';
+import { PACKAGE_LEVELS } from '@data/ProjectOptions';
 import { fetchApi } from '@lib/api';
 
 let projects: ProjectItem[] = [];
 let error = false;
 
+// Fetch live portfolio items from the Azure API
 try {
     projects = await fetchApi<ProjectItem[]>('/api/projects');
 } catch (fetchError) {
     console.error('Failed fetching projects from Azure API:', fetchError);
-
     error = true;
 }
+
+/**
+ * Arrange Package Levels:
+ * Reverse the original PACKAGE_LEVELS array so that Premium tier projects
+ * are displayed at the top of the grid list down to the Core tier
+ */
+const sortedPackages = [...PACKAGE_LEVELS].reverse();
+
+/**
+ * Group projects under their respective Package tier:
+ * Because ProjectItem.package is strictly typed as a string union
+ * ("Core" | "Professional" | "Premium"), match the values directly.
+ */
+const projectsByPackage = sortedPackages.map((pkg) => {
+    const filteredProjects = projects.filter((project) => project.package.toLowerCase() === pkg.label.toLowerCase());
+
+    return {
+        ...pkg,
+        projects: filteredProjects
+    };
+});
+
+// Calculate overall loaded count to correctly render empty state text
+const totalProjectsCount = projectsByPackage.reduce((acc, curr) => acc + curr.projects.length, 0);
 ---
 
 <Layout title="Portfolio">
-    <div class="px-4 relative z-10 max-w-7xl mx-auto py-12 sm:py-16 min-h-[80svh]">
-        <div class="text-center mb-12">
+    <div class="px-6 md:px-12 lg:px-16 relative z-10 max-w-7xl mx-auto py-12 sm:py-16 min-h-[80svh]">
+        {/* Header Block with Decorative Grid Brand Keywords */}
+        <div class="text-center mb-16">
             <h1 class="pb-2 font-header text-4xl md:text-6xl font-bold bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent tracking-tight">
                 Our Portfolio
             </h1>
@@ -33,6 +59,7 @@ try {
             </p>
         </div>
 
+        {/* API Error State Alert */}
         {
             error && (
                 <div class="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 text-center max-w-xl mx-auto">
@@ -41,14 +68,35 @@ try {
             )
         }
 
-        {!error && projects.length === 0 && <p class="text-gray-400 font-body text-center py-12">No projects showcased just yet. Check back soon!</p>}
+        {/* No Projects Fallback Banner */}
+        {!error && totalProjectsCount === 0 && <p class="text-gray-400 font-body text-center py-12">No projects showcased just yet. Check back soon!</p>}
 
+        {/* Package-Grouped Portfolio Showcase Feed */}
         {
-            !error && projects.length > 0 && (
-                <div id="photo-gallery" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center justify-center">
-                    {projects.map((project, index) => (
-                        <ProjectCard project={project} loading={index === 0 ? 'eager' : 'lazy'} />
-                    ))}
+            !error && totalProjectsCount > 0 && (
+                <div id="photo-gallery" class="space-y-16">
+                    {projectsByPackage.map(({ label, projects: packageProjects }) => {
+                        // Skip rendering this section completely if there are no projects within this package tier
+                        if (packageProjects.length === 0) return null;
+
+                        return (
+                            <section class="space-y-8">
+                                {/* Left-accented Section Header with your preferred pl-4 padding */}
+                                <div class="border-l-3 border-[#451a6b] pl-4">
+                                    <h2 class="font-header text-2xl md:text-3xl font-bold text-white tracking-tight">{label} Package Websites</h2>
+                                    <p class="text-gray-400 font-body text-sm mt-1 max-w-2xl leading-relaxed">
+                                        Discover projects built using our {label.toLowerCase()} tier features tailored to achieve business goals.
+                                    </p>
+                                </div>
+
+                                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center justify-center md:pl-6 lg:pl-6">
+                                    {packageProjects.map((project, index) => (
+                                        <ProjectCard project={project} loading={index === 0 ? 'eager' : 'lazy'} />
+                                    ))}
+                                </div>
+                            </section>
+                        );
+                    })}
                 </div>
             )
         }
@@ -59,6 +107,7 @@ try {
     import PhotoSwipeLightbox from 'photoswipe/lightbox';
     import 'photoswipe/style.css';
 
+    // Initialize global PhotoSwipe instance targeting only lightbox elements inside #photo-gallery
     const lightbox = new PhotoSwipeLightbox({
         gallery: '#photo-gallery',
         children: 'a.portfolio-lightbox-trigger',

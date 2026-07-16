@@ -20,3 +20,6 @@ export const INDUSTRY_SECTORS: SelectOption[] = [
     { value: 5, label: 'Law Firm' },
     { value: 6, label: 'Technology' }
 ];
+
+export type PackageLevelLabel = (typeof PACKAGE_LEVELS)[number]['label'];
+export type IndustrySectorLabel = (typeof INDUSTRY_SECTORS)[number]['label'];

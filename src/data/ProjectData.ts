@@ -1,4 +1,6 @@
-import type { SiteImageItem } from '@data/ImageData'
+// src/data/ProjectData.ts
+import type { SiteImageItem } from '@data/ImageData';
+import type { PackageLevelLabel, IndustrySectorLabel } from '@data/ProjectOptions';
 
 export interface ProjectItem {
     id: number;
@@ -7,13 +9,13 @@ export interface ProjectItem {
     techStack?: string;
     liveUrl?: string;
     siteImageId?: number;
-    siteImage?: SiteImageItem; // Nested object matching SiteImageDto
-    package: number;
+    siteImage?: SiteImageItem; //Nested object mapping
+    package: PackageLevelLabel; //Strictly typed: "Core" | "Professional" | "Premium"
     featured: boolean;
     displayOrder: number;
     completedOn?: string;
     isPublic: boolean;
-    industry: number;
+    industry: IndustrySectorLabel; //Strictly typed: "General" | "Construction" | ...
     clientName?: string;
 }
 
