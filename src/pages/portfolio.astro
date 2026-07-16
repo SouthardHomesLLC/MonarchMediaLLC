@@ -89,7 +89,7 @@ const totalProjectsCount = projectsByPackage.reduce((acc, curr) => acc + curr.pr
                                     </p>
                                 </div>
 
-                                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center justify-center md:pl-6 lg:pl-6">
+                                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-start justify-center md:pl-6 lg:pl-6">
                                     {packageProjects.map((project, index) => (
                                         <ProjectCard project={project} loading={index === 0 ? 'eager' : 'lazy'} />
                                     ))}
