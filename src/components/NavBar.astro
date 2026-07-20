@@ -1,16 +1,6 @@
 ---
 // src/components/NavBar.astro
-interface linkItem {
-    linkText: string;
-    href: string;
-}
-
-const publicItems: linkItem[] = [
-    { linkText: 'Home', href: '/' },
-    { linkText: 'Portfolio', href: '/portfolio' },
-    { linkText: 'Website Development', href: '/web-development' },
-    { linkText: 'Care Plans', href: '/care-plans' }
-];
+import { publicItems } from '@data/NavData';
 
 const currentPath = Astro.url.pathname;
 

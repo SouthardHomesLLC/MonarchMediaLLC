@@ -8,40 +8,6 @@ interface Props {
 }
 
 const { projects } = Astro.props;
-
-/*
- * Supports both string enum names returned by the API and numeric enum values.
- */
-const packageLabels: Record<string, string> = {
-    '0': 'Core',
-    '1': 'Professional',
-    '2': 'Premium',
-    Core: 'Core',
-    Professional: 'Professional',
-    Premium: 'Premium'
-};
-
-const industryLabels: Record<string, string> = {
-    '0': 'General',
-    '1': 'Construction',
-    '2': 'Landscaping',
-    '3': 'Restaurant',
-    '4': 'Healthcare',
-    '5': 'Law Firm',
-    '6': 'Technology',
-    General: 'General',
-    Construction: 'Construction',
-    Landscaping: 'Landscaping',
-    Restaurant: 'Restaurant',
-    Healthcare: 'Healthcare',
-    LawFirm: 'Law Firm',
-    'Law Firm': 'Law Firm',
-    Technology: 'Technology'
-};
-
-const getPackageLabel = (value: ProjectItem['package']) => packageLabels[String(value)] ?? 'Core';
-
-const getIndustryLabel = (value: ProjectItem['industry']) => industryLabels[String(value)] ?? 'General';
 ---
 
 <section class="space-y-4">
@@ -55,37 +21,37 @@ const getIndustryLabel = (value: ProjectItem['industry']) => industryLabels[Stri
                 <p class="p-8 text-center text-gray-500 font-body text-sm italic">No entries returned from the Azure Database.</p>
             ) : (
                 <div class="divide-y divide-white/5">
-                    {projects.map((proj) => (
-                        <div class="py-7 px-6 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-white/[0.015] transition-all duration-200 gap-6 group">
+                    {projects.map((project) => (
+                        <article class="py-7 px-6 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-white/[0.015] transition-all duration-200 gap-6 group">
                             <div class="flex items-start gap-5 min-w-0 flex-1">
                                 <div class="w-16 h-16 bg-[#1a1a1e] rounded-xl border border-white/10 overflow-hidden flex-shrink-0 flex items-center justify-center shadow-md mt-0.5 group-hover:border-white/20 transition-colors">
-                                    {proj.siteImage?.publicUrl ? (
+                                    {project.siteImage?.publicUrl ? (
                                         <Image
-                                            src={proj.siteImage.publicUrl}
-                                            alt={proj.siteImage.altText || proj.title}
+                                            src={project.siteImage.publicUrl}
+                                            alt={project.siteImage.altText || project.title}
                                             width={128}
                                             height={128}
                                             class="w-full h-full object-cover"
                                         />
                                     ) : (
-                                        <span class="text-[10px] text-gray-600 italic">No Img</span>
+                                        <span class="text-[10px] text-gray-600 italic">No Image</span>
                                     )}
                                 </div>
 
                                 <div class="truncate space-y-2 flex-1">
                                     <div class="flex flex-wrap items-center gap-2.5">
-                                        <h3 class="font-body font-bold text-base text-white truncate tracking-tight">{proj.title}</h3>
+                                        <h3 class="font-body font-bold text-base text-white truncate tracking-tight">{project.title}</h3>
 
-                                        <div class="flex items-center gap-1.5">
+                                        <div class="flex flex-wrap items-center gap-1.5">
                                             <span class="bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-body text-[9px] uppercase font-bold px-2.5 py-0.5 rounded-md tracking-wider">
-                                                {getPackageLabel(proj.package)}
+                                                {project.package}
                                             </span>
 
                                             <span class="bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-body text-[9px] uppercase font-bold px-2.5 py-0.5 rounded-md tracking-wider">
-                                                {getIndustryLabel(proj.industry)}
+                                                {project.industry}
                                             </span>
 
-                                            {proj.featured && (
+                                            {project.featured && (
                                                 <span class="bg-amber-500/10 border border-amber-500/20 text-amber-400 font-body text-[9px] uppercase font-bold px-2.5 py-0.5 rounded-md tracking-wider">
                                                     Featured
                                                 </span>
@@ -93,27 +59,27 @@ const getIndustryLabel = (value: ProjectItem['industry']) => industryLabels[Stri
 
                                             <span
                                                 class={`font-body text-[9px] uppercase font-bold px-2.5 py-0.5 rounded-md tracking-wider ${
-                                                    proj.isPublic
+                                                    project.isPublic
                                                         ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
                                                         : 'bg-zinc-500/10 border border-zinc-500/20 text-zinc-400'
                                                 }`}
                                             >
-                                                {proj.isPublic ? 'Public' : 'Hidden'}
+                                                {project.isPublic ? 'Public' : 'Hidden'}
                                             </span>
                                         </div>
                                     </div>
 
                                     <p class="text-sm text-gray-400 truncate font-body">
-                                        <span class="text-gray-200 font-medium">{proj.clientName || 'Internal Project'}</span>
+                                        <span class="text-gray-200 font-medium">{project.clientName || 'Internal Project'}</span>
                                         <span class="mx-2 text-white/10">•</span>
-                                        Order Sequence: <span class="text-gray-300 font-medium">{proj.displayOrder}</span>
+                                        Order Sequence: <span class="text-gray-300 font-medium">{project.displayOrder}</span>
                                     </p>
                                 </div>
                             </div>
 
                             <div class="flex items-center gap-3 self-end sm:self-center flex-shrink-0">
                                 <a
-                                    href={`/admin/projects?edit=${proj.id}`}
+                                    href={`/admin/projects?edit=${project.id}`}
                                     class="text-xs text-gray-300 hover:text-white px-4 py-2.5 rounded-xl border border-white/5 transition-all font-body font-semibold min-w-[65px] text-center active:scale-[0.98]"
                                 >
                                     Edit
@@ -121,13 +87,13 @@ const getIndustryLabel = (value: ProjectItem['industry']) => industryLabels[Stri
 
                                 <button
                                     type="button"
-                                    data-delete-id={proj.id}
-                                    class="delete-project-btn text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 px-4 py-2.5 rounded-xl border border-red-500/10 transition-all font-body font-semibold active:scale-[0.98] cursor-pointer"
+                                    data-delete-id={project.id}
+                                    class="delete-project-btn text-xs bg-red-500/10 hover:bg-red-500/20 disabled:opacity-60 disabled:cursor-not-allowed text-red-400 hover:text-red-300 px-4 py-2.5 rounded-xl border border-red-500/10 transition-all font-body font-semibold active:scale-[0.98] cursor-pointer"
                                 >
                                     Delete
                                 </button>
                             </div>
-                        </div>
+                        </article>
                     ))}
                 </div>
             )
@@ -136,32 +102,93 @@ const getIndustryLabel = (value: ProjectItem['industry']) => industryLabels[Stri
 </section>
 
 <script is:inline>
-    document.addEventListener('click', async (e) => {
-        const btn = e.target.closest('.delete-project-btn');
-        if (!btn) return;
+    {
+        async function getDeleteErrorMessage(response) {
+            const responseText = await response.text();
 
-        if (!confirm('Are you sure you want to permanently delete this project?')) return;
-
-        const projectId = parseInt(btn.getAttribute('data-delete-id'), 10);
-
-        try {
-            const res = await fetch('/api/admin/projects', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    id: projectId,
-                    action: 'delete'
-                })
-            });
-
-            if (res.ok) {
-                window.location.href = window.location.pathname + '?success=Project+deleted+successfully!';
-            } else {
-                const errData = await res.json().catch(() => ({}));
-                alert('Delete failed: ' + (errData.error || 'Server processing error'));
+            if (!responseText) {
+                return 'Server processing error';
             }
-        } catch {
-            alert('Network error encountered trying to remove project.');
+
+            try {
+                const errorData = JSON.parse(responseText);
+
+                return errorData.error ?? errorData.message ?? responseText;
+            } catch {
+                return responseText;
+            }
         }
-    });
+
+        document.addEventListener('click', async (event) => {
+            const target = event.target;
+
+            if (!(target instanceof Element)) {
+                return;
+            }
+
+            const button = target.closest('.delete-project-btn');
+
+            if (!(button instanceof HTMLButtonElement)) {
+                return;
+            }
+
+            const projectIdValue = button.dataset.deleteId;
+
+            if (!projectIdValue) {
+                alert('The project ID is missing.');
+                return;
+            }
+
+            const projectId = Number.parseInt(projectIdValue, 10);
+
+            if (!Number.isInteger(projectId)) {
+                alert('The project ID is invalid.');
+                return;
+            }
+
+            const confirmed = window.confirm('Are you sure you want to permanently delete this project?');
+
+            if (!confirmed) {
+                return;
+            }
+
+            const originalText = button.textContent;
+
+            button.disabled = true;
+            button.textContent = 'Deleting...';
+
+            try {
+                const response = await fetch('/api/admin/projects', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: projectId,
+                        action: 'delete'
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorMessage = await getDeleteErrorMessage(response);
+
+                    alert(`Delete failed: ${errorMessage}`);
+
+                    button.disabled = false;
+                    button.textContent = originalText || 'Delete';
+
+                    return;
+                }
+
+                window.location.href = `${window.location.pathname}` + '?success=Project+deleted+successfully!';
+            } catch (error) {
+                console.error('Project deletion failed:', error);
+
+                alert('Network error encountered while trying to remove the project.');
+
+                button.disabled = false;
+                button.textContent = originalText || 'Delete';
+            }
+        });
+    }
 </script>
