@@ -1,0 +1,168 @@
+---
+const rows = [
+    {
+        feature: 'Custom responsive design',
+        core: 'Included',
+        professional: 'Included',
+        premium: 'Included',
+        bespoke: 'Included'
+    },
+    {
+        feature: 'Included pages',
+        core: 'Up to 3',
+        professional: 'Up to 7',
+        premium: 'Project based',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'Contact or lead forms',
+        core: 'Standard',
+        professional: 'Advanced',
+        premium: 'Workflow based',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'SEO foundation',
+        core: 'Included',
+        professional: 'Expanded',
+        premium: 'Advanced',
+        bespoke: 'Custom strategy'
+    },
+    {
+        feature: 'Portfolio or gallery',
+        core: 'Optional',
+        professional: 'Included',
+        premium: 'Dynamic',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'CMS or admin dashboard',
+        core: '—',
+        professional: 'Optional',
+        premium: 'Included',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'Database integration',
+        core: '—',
+        professional: '—',
+        premium: 'Included',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'Secure authentication',
+        core: '—',
+        professional: '—',
+        premium: 'Included',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'Third-party integrations',
+        core: 'Optional',
+        professional: 'Available',
+        premium: 'Included',
+        bespoke: 'Advanced'
+    },
+    {
+        feature: 'Custom API backend',
+        core: '—',
+        professional: '—',
+        premium: 'Optional',
+        bespoke: 'Included'
+    },
+    {
+        feature: 'Client or customer portal',
+        core: '—',
+        professional: '—',
+        premium: 'Optional',
+        bespoke: 'Included'
+    },
+    {
+        feature: 'Custom software workflows',
+        core: '—',
+        professional: '—',
+        premium: 'Limited',
+        bespoke: 'Included'
+    },
+    {
+        feature: 'Revision rounds',
+        core: '2',
+        professional: '3',
+        premium: '4',
+        bespoke: 'Project based'
+    }
+] as const;
+---
+
+<section id="package-comparison" aria-labelledby="comparison-heading">
+    <header class="max-w-3xl">
+        <p class="font-body text-xs font-bold uppercase tracking-[0.25em] text-header">
+            Full package details
+        </p>
+
+        <h2
+            id="comparison-heading"
+            class="mt-4 font-header text-4xl text-white sm:text-5xl"
+        >
+            Compare website packages
+        </h2>
+
+        <p class="mt-5 font-body text-base leading-7 text-white/60">
+            Use the package cards for a quick overview and this table for a
+            deeper comparison of design, content, integrations, and software
+            capabilities.
+        </p>
+    </header>
+
+    <div class="mt-10 overflow-x-auto rounded-2xl border border-white/10 bg-[#0c0c0e]/70">
+        <table class="w-full min-w-[860px] border-collapse font-body text-sm">
+            <thead>
+                <tr class="border-b border-white/10 bg-white/[0.025]">
+                    <th class="px-6 py-5 text-left font-semibold text-white">
+                        Feature
+                    </th>
+                    <th class="px-5 py-5 text-center font-semibold text-white">
+                        Core
+                    </th>
+                    <th class="px-5 py-5 text-center font-semibold text-header">
+                        Professional
+                    </th>
+                    <th class="px-5 py-5 text-center font-semibold text-white">
+                        Premium
+                    </th>
+                    <th class="px-5 py-5 text-center font-semibold text-white">
+                        Bespoke
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {
+                    rows.map((row) => (
+                        <tr class="border-b border-white/5 last:border-0">
+                            <th class="px-6 py-4 text-left font-medium text-white/75">
+                                {row.feature}
+                            </th>
+
+                            <td class="px-5 py-4 text-center text-white/55">
+                                {row.core}
+                            </td>
+
+                            <td class="bg-header/[0.025] px-5 py-4 text-center text-white/75">
+                                {row.professional}
+                            </td>
+
+                            <td class="px-5 py-4 text-center text-white/55">
+                                {row.premium}
+                            </td>
+
+                            <td class="px-5 py-4 text-center text-white/55">
+                                {row.bespoke}
+                            </td>
+                        </tr>
+                    ))
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

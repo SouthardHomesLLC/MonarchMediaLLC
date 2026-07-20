@@ -1,0 +1,34 @@
+---
+import Layout from '@layouts/Layout.astro';
+import AddOnCatalog from '@components/pricing/AddOnCatalog.astro';
+import CareCta from '@components/pricing/CareCta.astro';
+import PackageBuyingGuide from '@components/pricing/PackageBuyingGuide.astro';
+import PackageComparisonTable from '@components/pricing/PackageComparisonTable.astro';
+import PackageGrid from '@components/pricing/PackageGrid.astro';
+import PricingFaq from '@components/pricing/PricingFaq.astro';
+import PricingHero from '@components/pricing/PricingHero.astro';
+import ProcessTimeline from '@components/pricing/ProcessTimeline.astro';
+import WhyMonarch from '@components/pricing/WhyMonarch.astro';
+---
+
+<Layout title="Web Development Services & Pricing">
+    <main class="relative isolate overflow-hidden">
+        <div
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[40rem] bg-[radial-gradient(circle_at_top,rgba(69,26,107,0.38),transparent_68%)]"
+        >
+        </div>
+
+        <div class="mx-auto max-w-7xl space-y-24 px-6 py-20 sm:px-8 lg:px-12">
+            <PricingHero />
+            <WhyMonarch />
+            <PackageGrid />
+            <PackageBuyingGuide />
+            <PackageComparisonTable />
+            <ProcessTimeline />
+            <AddOnCatalog />
+            <PricingFaq />
+            <CareCta />
+        </div>
+    </main>
+</Layout>

@@ -1,0 +1,115 @@
+---
+const faqs = [
+    {
+        question: 'Are these fixed prices?',
+        answer: 'They are starting points. Final pricing reflects the confirmed page count, content readiness, functionality, integrations, timeline, and overall project scope.'
+    },
+    {
+        question: 'Can I add features without changing packages?',
+        answer: 'Yes. Many design, content, marketing, and integration features can be added individually when a full package upgrade is unnecessary.'
+    },
+    {
+        question: 'Who provides the website content?',
+        answer: 'Clients may provide finalized text and imagery, or add copywriting and content-support services to the project scope.'
+    },
+    {
+        question: 'Will I own the finished website?',
+        answer: 'Ownership, hosting access, third-party accounts, licensing, and source-code delivery are documented clearly in the project proposal and agreement.'
+    },
+    {
+        question: 'What happens after launch?',
+        answer: 'You may manage the website independently or choose a Monarch Care plan for maintenance, content updates, analytics, and continued improvements.'
+    },
+    {
+        question: 'Can Monarch build something outside these packages?',
+        answer: 'Yes. Bespoke projects are scoped around unique requirements, including custom applications, APIs, portals, automation, and proprietary workflows.'
+    }
+] as const;
+---
+
+<section aria-labelledby="pricing-faq-heading" class="py-12">
+    <header class="max-w-3xl">
+        <p class="font-body text-xs font-bold uppercase tracking-[0.25em] text-header">Common questions</p>
+
+        <h2 id="pricing-faq-heading" class="mt-4 font-header text-4xl text-white sm:text-5xl">Services and pricing FAQ</h2>
+    </header>
+
+    <div class="mt-10 grid gap-4 lg:grid-cols-2">
+        {
+            faqs.map((faq) => (
+                <details class="faq-card group rounded-xl border border-white/10 bg-[#0c0c0e]/70 p-6 transition-colors duration-300 hover:border-white/20">
+                    <summary class="flex cursor-pointer list-none items-center justify-between gap-5 font-subheader text-xl text-white outline-none select-none">
+                        {faq.question}
+                        {/* Control the rotation directly with JS classes for perfect sync */}
+                        <span class="faq-icon text-header transition-transform duration-300 pointer-events-none">+</span>
+                    </summary>
+
+                    <div class="faq-wrapper grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
+                        <div class="faq-content overflow-hidden">
+                            <p class="pt-4 font-body text-sm leading-7 text-white/55">{faq.answer}</p>
+                        </div>
+                    </div>
+                </details>
+            ))
+        }
+    </div>
+</section>
+
+<script>
+    class Accordion {
+        el: HTMLDetailsElement;
+        summary: HTMLElement;
+        wrapper: HTMLElement;
+        icon: HTMLElement;
+
+        constructor(el: HTMLDetailsElement) {
+            this.el = el;
+            this.summary = el.querySelector('summary')!;
+            this.wrapper = el.querySelector('.faq-wrapper')!;
+            this.icon = el.querySelector('.faq-icon')!;
+
+            this.summary.addEventListener('click', (e) => this.onClick(e));
+        }
+
+        onClick(e: Event) {
+            e.preventDefault();
+
+            if (this.el.open) {
+                //Instantly start rotating the icon back to a plus
+                this.icon.classList.remove('rotate-45');
+
+                //Shrink content wrapper
+                this.wrapper.classList.remove('grid-rows-[1fr]');
+                this.wrapper.classList.add('grid-rows-[0fr]');
+
+                setTimeout(() => {
+                    this.el.open = false;
+                }, 300);
+            } else {
+                //Instantly start rotating the icon to an "x"
+                this.icon.classList.add('rotate-45');
+
+                this.el.open = true;
+                requestAnimationFrame(() => {
+                    this.wrapper.classList.remove('grid-rows-[0fr]');
+                    this.wrapper.classList.add('grid-rows-[1fr]');
+                });
+            }
+        }
+    }
+
+    //Initialize on load
+    document.querySelectorAll('.faq-card').forEach((el) => {
+        new Accordion(el as HTMLDetailsElement);
+    });
+</script>
+
+<style>
+    /* Hide standard details arrow marker across browsers */
+    summary::-webkit-details-marker {
+        display: none;
+    }
+    summary {
+        list-style: none;
+    }
+</style>

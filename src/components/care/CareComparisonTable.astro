@@ -1,0 +1,175 @@
+---
+const rows = [
+    {
+        feature: 'Hosting oversight',
+        essential: 'Included',
+        managed: 'Included',
+        growth: 'Included',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'SSL monitoring',
+        essential: 'Included',
+        managed: 'Included',
+        growth: 'Included',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'Uptime monitoring',
+        essential: 'Included',
+        managed: 'Included',
+        growth: 'Included',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'Dependency updates',
+        essential: 'Included',
+        managed: 'Included',
+        growth: 'Included',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'Scheduled backups',
+        essential: 'Included',
+        managed: 'Included',
+        growth: 'Included',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'Content requests',
+        essential: '—',
+        managed: '3 monthly',
+        growth: '8 monthly',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'Technical support',
+        essential: '1 hour',
+        managed: '1 hour',
+        growth: 'Priority support',
+        bespoke: 'Agreement based'
+    },
+    {
+        feature: 'Analytics review',
+        essential: '—',
+        managed: 'Quarterly',
+        growth: 'Monthly',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'SEO improvements',
+        essential: '—',
+        managed: '—',
+        growth: 'Included',
+        bespoke: 'Custom'
+    },
+    {
+        feature: 'Website improvement time',
+        essential: '—',
+        managed: '—',
+        growth: '2 hours',
+        bespoke: 'Reserved hours'
+    },
+    {
+        feature: 'API and integration monitoring',
+        essential: '—',
+        managed: '—',
+        growth: '—',
+        bespoke: 'Included'
+    },
+    {
+        feature: 'Database maintenance',
+        essential: '—',
+        managed: '—',
+        growth: '—',
+        bespoke: 'Included'
+    },
+    {
+        feature: 'Response time',
+        essential: '3 business days',
+        managed: '2 business days',
+        growth: '1–2 business days',
+        bespoke: 'Agreement based'
+    },
+    {
+        feature: 'Initial commitment',
+        essential: '3 months',
+        managed: '3 months',
+        growth: '3 months',
+        bespoke: '6 months'
+    }
+] as const;
+---
+
+<section id="care-comparison" aria-labelledby="comparison-heading">
+    <header class="max-w-3xl">
+        <p class="font-body text-xs font-bold uppercase tracking-[0.25em] text-header">
+            Full coverage details
+        </p>
+
+        <h2
+            id="comparison-heading"
+            class="mt-4 font-header text-4xl text-white sm:text-5xl"
+        >
+            Compare Monarch Care plans
+        </h2>
+
+        <p class="mt-5 font-body text-base leading-7 text-white/60">
+            The cards above highlight the main differences. Use this table to
+            compare the complete technical, content, analytics, and development
+            coverage included with each plan.
+        </p>
+    </header>
+
+    <div class="mt-10 overflow-x-auto rounded-2xl border border-white/10 bg-[#0c0c0e]/70">
+        <table class="w-full min-w-[820px] border-collapse font-body text-sm">
+            <thead>
+                <tr class="border-b border-white/10 bg-white/[0.025]">
+                    <th class="px-6 py-5 text-left font-semibold text-white">
+                        Feature
+                    </th>
+                    <th class="px-5 py-5 text-center font-semibold text-white">
+                        Essential
+                    </th>
+                    <th class="px-5 py-5 text-center font-semibold text-header">
+                        Managed
+                    </th>
+                    <th class="px-5 py-5 text-center font-semibold text-white">
+                        Growth
+                    </th>
+                    <th class="px-5 py-5 text-center font-semibold text-white">
+                        Bespoke
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {
+                    rows.map((row) => (
+                        <tr class="border-b border-white/5 last:border-0">
+                            <th class="px-6 py-4 text-left font-medium text-white/75">
+                                {row.feature}
+                            </th>
+
+                            <td class="px-5 py-4 text-center text-white/55">
+                                {row.essential}
+                            </td>
+
+                            <td class="bg-header/[0.025] px-5 py-4 text-center text-white/75">
+                                {row.managed}
+                            </td>
+
+                            <td class="px-5 py-4 text-center text-white/55">
+                                {row.growth}
+                            </td>
+
+                            <td class="px-5 py-4 text-center text-white/55">
+                                {row.bespoke}
+                            </td>
+                        </tr>
+                    ))
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

@@ -1,0 +1,32 @@
+---
+import CarePlanCard from '@components/care/CarePlanCard.astro';
+import { MONARCH_CARE_PLANS } from '@data/MonarchCarePlans';
+---
+
+<section aria-labelledby="care-plan-heading">
+    <div class="mx-auto max-w-3xl text-center">
+        <p class="font-body text-xs font-bold uppercase tracking-[0.25em] text-header">
+            Choose your level of support
+        </p>
+
+        <h2
+            id="care-plan-heading"
+            class="mt-4 font-header text-4xl text-white sm:text-5xl"
+        >
+            Care plans for every stage
+        </h2>
+
+        <p class="mt-5 font-body text-base leading-7 text-white/60">
+            Compare the core allowances here, then review the full coverage table
+            below for technical and service details.
+        </p>
+    </div>
+
+    <div class="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+        {
+            MONARCH_CARE_PLANS.map((plan) => (
+                <CarePlanCard plan={plan} />
+            ))
+        }
+    </div>
+</section>

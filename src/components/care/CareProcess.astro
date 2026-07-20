@@ -1,0 +1,68 @@
+---
+const steps = [
+    {
+        number: '01',
+        title: 'Submit your request',
+        description:
+            'Send the requested content, files, or issue details through the agreed support channel.'
+    },
+    {
+        number: '02',
+        title: 'We review the scope',
+        description:
+            'We confirm the request fits the plan allowance and identify anything that needs clarification.'
+    },
+    {
+        number: '03',
+        title: 'Monarch completes the work',
+        description:
+            'The update, maintenance task, or improvement is completed according to the plan response time.'
+    },
+    {
+        number: '04',
+        title: 'You review the result',
+        description:
+            'We confirm completion and make any reasonable corrections related to the original request.'
+    }
+] as const;
+---
+
+<section aria-labelledby="process-heading">
+    <header class="mx-auto max-w-3xl text-center">
+        <p class="font-body text-xs font-bold uppercase tracking-[0.25em] text-header">
+            Simple ongoing support
+        </p>
+
+        <h2
+            id="process-heading"
+            class="mt-4 font-header text-4xl text-white sm:text-5xl"
+        >
+            How Monarch Care works
+        </h2>
+
+        <p class="mt-5 font-body text-base leading-7 text-white/60">
+            Submit what you need, and Monarch handles the technical work without
+            adding another complicated process to your business.
+        </p>
+    </header>
+
+    <ol class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        {
+            steps.map((step) => (
+                <li class="relative rounded-2xl border border-white/10 bg-[#0c0c0e]/70 p-6">
+                    <span class="font-header text-4xl text-primary/70">
+                        {step.number}
+                    </span>
+
+                    <h3 class="mt-5 font-subheader text-xl text-white">
+                        {step.title}
+                    </h3>
+
+                    <p class="mt-3 font-body text-sm leading-6 text-white/55">
+                        {step.description}
+                    </p>
+                </li>
+            ))
+        }
+    </ol>
+</section>

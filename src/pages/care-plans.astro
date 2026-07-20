@@ -1,0 +1,30 @@
+---
+import Layout from '@layouts/Layout.astro';
+import CareComparisonTable from '@components/care/CareComparisonTable.astro';
+import CareFaq from '@components/care/CareFaq.astro';
+import CareFinalCta from '@components/care/CareFinalCta.astro';
+import CareHero from '@components/care/CareHero.astro';
+import CarePlanGrid from '@components/care/CarePlanGrid.astro';
+import CareProcess from '@components/care/CareProcess.astro';
+import ContentRequestGrid from '@components/care/ContentRequestGrid.astro';
+---
+
+<Layout title="Monarch Care Plans">
+    <main class="relative isolate overflow-hidden">
+        <div
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[38rem] bg-[radial-gradient(circle_at_top,rgba(136,69,124,0.28),transparent_68%)]"
+        >
+        </div>
+
+        <div class="mx-auto max-w-7xl space-y-24 px-6 py-20 sm:px-8 lg:px-12">
+            <CareHero />
+            <CarePlanGrid />
+            <CareComparisonTable />
+            <ContentRequestGrid />
+            <CareProcess />
+            <CareFaq />
+            <CareFinalCta />
+        </div>
+    </main>
+</Layout>

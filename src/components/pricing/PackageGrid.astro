@@ -1,0 +1,38 @@
+---
+import PackageCard from '@components/pricing/PackageCard.astro';
+import { SERVICE_PACKAGES } from '@data/ServicePackages';
+---
+
+<section id="packages" aria-labelledby="packages-heading">
+    <header class="mx-auto max-w-3xl text-center">
+        <p class="font-body text-xs font-bold uppercase tracking-[0.25em] text-header">
+            Choose your starting point
+        </p>
+
+        <h2
+            id="packages-heading"
+            class="mt-4 font-header text-4xl text-white sm:text-5xl"
+        >
+            Website packages for every stage
+        </h2>
+
+        <p class="mt-5 font-body text-base leading-7 text-white/60">
+            Each package provides a clear foundation while leaving room to tailor
+            the final scope around your business.
+        </p>
+    </header>
+
+    <div class="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+        {
+            SERVICE_PACKAGES.map((servicePackage) => (
+                <PackageCard servicePackage={servicePackage} />
+            ))
+        }
+    </div>
+
+    <p class="mx-auto mt-8 max-w-3xl text-center font-body text-sm leading-6 text-white/40">
+        Final pricing depends on scope, content readiness, integrations,
+        functionality, and timeline. A detailed proposal is provided after the
+        initial consultation.
+    </p>
+</section>

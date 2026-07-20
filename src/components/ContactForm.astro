@@ -1,0 +1,191 @@
+---
+// src/components/ContactForm.astro
+interface Props {
+    selectedService?: string;
+}
+
+const { selectedService = '' } = Astro.props;
+const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY;
+---
+
+<form id="waitlist-form" class="space-y-6" novalidate>
+    {/* Web3Forms Access Key */}
+    <input type="hidden" name="access_key" value={web3formsKey} />
+
+    {/* Silent Honeypot Botcheck */}
+    <input type="checkbox" class="hidden" style="display:none" name="botcheck" />
+
+    {/* Full Name Input */}
+    <div class="space-y-2">
+        <label for="name" class="block font-body text-xs font-bold uppercase tracking-wider text-white/70">
+            Full Name <span class="text-red-400">*</span>
+        </label>
+        <input
+            type="text"
+            name="name"
+            id="name"
+            required
+            class="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 font-body text-sm text-white placeholder-white/25 outline-none focus:border-complementary focus:bg-white/[0.05] focus:ring-1 focus:ring-complementary transition-all"
+            placeholder="John Doe"
+        />
+        <div class="empty-feedback text-red-400 text-xs mt-1">Please provide your full name so we know who to address.</div>
+    </div>
+
+    {/* Email & Organization Group */}
+    <div class="grid gap-6 sm:grid-cols-2">
+        <div class="space-y-2">
+            <label for="email" class="block font-body text-xs font-bold uppercase tracking-wider text-white/70">
+                Email address <span class="text-red-400">*</span>
+            </label>
+            <input
+                type="email"
+                name="email"
+                id="email"
+                required
+                class="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 font-body text-sm text-white placeholder-white/25 outline-none focus:border-complementary focus:bg-white/[0.05] focus:ring-1 focus:ring-complementary transition-all"
+                placeholder="you@example.com"
+            />
+            <div class="empty-feedback text-red-400 text-xs mt-1">Please provide your email address.</div>
+            <div class="invalid-feedback text-red-400 text-xs mt-1">Please provide a valid email address.</div>
+        </div>
+        <div class="space-y-2">
+            <label for="company" class="block font-body text-xs font-bold uppercase tracking-wider text-white/70">
+                Company / Org <span class="text-[10px] text-white/40 normal-case font-normal">(Optional)</span>
+            </label>
+            <input
+                type="text"
+                name="company"
+                id="company"
+                class="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 font-body text-sm text-white placeholder-white/25 outline-none focus:border-complementary focus:bg-white/[0.05] focus:ring-1 focus:ring-complementary transition-all"
+                placeholder="Acme Corp"
+            />
+        </div>
+    </div>
+
+    {/* Primary Interest Area */}
+    <div class="space-y-2">
+        <label for="interest" class="block font-body text-xs font-bold uppercase tracking-wider text-white/70">
+            What service are you most interested in?
+        </label>
+        <select
+            name="interest"
+            id="interest"
+            class="w-full rounded-xl border border-white/10 bg-[#121214] px-4 py-3 font-body text-sm text-white/80 outline-none focus:border-complementary focus:ring-1 focus:ring-complementary transition-all"
+        >
+            <option value="custom-website" selected={selectedService === 'website'}>Custom Web Development & Design</option>
+            <option value="care-plan" selected={selectedService === 'care-plan'}>Monarch Care Plan (Hosting & Maintenance)</option>
+            <option value="full-scope">Bespoke Enterprise Software / Portal</option>
+            <option value="other">Other / General Consultation</option>
+        </select>
+    </div>
+
+    {/* Message / Goals Area */}
+    <div class="space-y-2">
+        <label for="message" class="block font-body text-xs font-bold uppercase tracking-wider text-white/70">
+            Project goals & timeline <span class="text-red-400">*</span>
+        </label>
+        <textarea
+            name="message"
+            id="message"
+            rows="4"
+            required
+            class="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 font-body text-sm text-white placeholder-white/25 outline-none focus:border-complementary focus:bg-white/[0.05] focus:ring-1 focus:ring-complementary transition-all resize-none"
+            placeholder="Tell us about your project goals, required launch timelines, or any details that will help us understand your needs..."></textarea>
+        <div class="empty-feedback text-red-400 text-xs mt-1">Please enter your project goals.</div>
+    </div>
+
+    {/* Submit Button */}
+    <div class="pt-2">
+        <button
+            type="submit"
+            class="w-full inline-flex items-center justify-center font-body text-xs font-bold uppercase tracking-[0.2em] bg-primary text-white py-4 rounded-xl border border-white/10 shadow-[0_4px_15px_rgba(69,26,107,0.3)] hover:bg-primary/90 hover:shadow-[0_4px_25px_rgba(69,26,107,0.45)] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer"
+        >
+            Apply for early access
+        </button>
+    </div>
+
+    {/* Submission Feedback Hook */}
+    <div id="result" class="mt-3 text-center font-body text-sm transition-all duration-300"></div>
+</form>
+
+<style>
+    .invalid-feedback,
+    .empty-feedback {
+        display: none;
+    }
+
+    .was-validated :placeholder-shown:invalid ~ .empty-feedback {
+        display: block;
+    }
+
+    .was-validated :not(:placeholder-shown):invalid ~ .invalid-feedback {
+        display: block;
+    }
+
+    .was-validated :invalid {
+        border-color: rgba(239, 68, 68, 0.4);
+    }
+</style>
+
+<script is:inline>
+    const form = document.getElementById('waitlist-form');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        form.classList.add('was-validated');
+
+        if (!form.checkValidity()) {
+            form.querySelectorAll(':invalid')[0].focus();
+            return;
+        }
+
+        const formData = new FormData(form);
+        const object = Object.fromEntries(formData);
+
+        if (!object.botcheck) {
+            object.botcheck = '';
+        }
+
+        const json = JSON.stringify(object);
+
+        result.classList.remove('text-red-400', 'text-green-400');
+        result.classList.add('text-white/60');
+        result.innerHTML = 'Submitting application...';
+
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+            },
+            body: json
+        })
+            .then(async (response) => {
+                let json = await response.json();
+                if (response.status == 200) {
+                    result.classList.remove('text-white/60', 'text-red-400');
+                    result.classList.add('text-green-400');
+                    result.innerHTML = "Application received! We'll reach out soon.";
+                } else {
+                    console.log(response);
+                    result.classList.remove('text-white/60', 'text-green-400');
+                    result.classList.add('text-red-400');
+                    result.innerHTML = json.message || 'An error occurred during submission.';
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                result.classList.remove('text-white/60', 'text-green-400');
+                result.classList.add('text-red-400');
+                result.innerHTML = 'Something went wrong! Please try again later.';
+            })
+            .then(function () {
+                form.reset();
+                form.classList.remove('was-validated');
+                setTimeout(() => {
+                    result.innerHTML = '';
+                }, 6000);
+            });
+    });
+</script>

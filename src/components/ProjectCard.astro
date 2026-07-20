@@ -8,7 +8,6 @@ interface Props {
     loading?: 'lazy' | 'eager';
 }
 
-// Default loading to 'lazy' if not passed down
 const { project, loading = 'lazy' } = Astro.props;
 
 // Safely pull the publicUrl from the nested object returned by your Azure backend payload
@@ -17,21 +16,20 @@ const imageAlt = project.title || 'Showcase Project Image';
 ---
 
 <div
-    class="relative w-full max-w-sm md:max-w-none bg-[#121214]
+    class="relative w-full max-w-sm md:max-w-none bg-[#0c0c0e]
     rounded-2xl border border-white/5
-    border-b-3 border-b-[#9B5DE5]
-    hover:border-[#451a6b]/40 hover:shadow-2xl hover:shadow-[#451a6b]/5
-    transition-all duration-300 group flex flex-col overflow-hidden"
+    hover:border-primary/40 hover:shadow-[0_0_30px_rgba(69,26,107,0.15)]
+    transition-all duration-500 group flex flex-col overflow-hidden"
 >
     {
         project.featured && (
-            <span class="absolute top-4 right-4 z-20 bg-gradient-to-r from-amber-200 to-yellow-500 text-[#020001] font-body font-bold text-xs px-2.5 py-1 rounded-full shadow-md uppercase tracking-wider">
-                Featured
+            <span class="absolute top-4 right-4 z-20 bg-gradient-to-r from-complementary to-primary text-white font-body font-bold text-[10px] px-2.5 py-1 rounded-md shadow-lg uppercase tracking-wider border border-white/10">
+                Featured Work
             </span>
         )
     }
 
-    <div class="relative overflow-hidden aspect-video w-full border-b border-white/5 bg-[#1a1a1e]">
+    <div class="relative overflow-hidden aspect-video w-full border-b border-white/5 bg-[#121214]">
         {
             imageUrl ? (
                 <a
@@ -42,12 +40,19 @@ const imageAlt = project.title || 'Showcase Project Image';
                     rel="noreferrer"
                     class="portfolio-lightbox-trigger block w-full h-full cursor-zoom-in"
                 >
+                    <div
+                        class="absolute inset-0 
+                        bg-gradient-to-t from-black/40 to-transparent z-10 
+                        opacity-60 group-hover:opacity-20 transition-opacity duration-500"
+                    />
                     <Image
                         src={imageUrl}
                         alt={imageAlt}
                         width={640}
                         height={360}
-                        class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                        class="w-full h-full object-cover 
+                                group-hover:scale-110 transition-transform 
+                                duration-700 ease-out"
                         loading={loading}
                     />
                 </a>
@@ -57,27 +62,42 @@ const imageAlt = project.title || 'Showcase Project Image';
         }
     </div>
 
-    <div class="p-6 flex flex-col justify-between flex-grow space-y-6 text-center">
-        <div class="space-y-2">
-            <h2 class="font-body font-bold text-xl text-white tracking-tight leading-tight group-hover:text-gray-200 transition-colors">
+    <div class="p-6 flex flex-col justify-between flex-grow space-y-5">
+        <div class="space-y-1.5">
+            <div class="flex items-center gap-2">
+                {project.industry && <span class="font-body text-[10px] text-gray-400 font-medium uppercase tracking-wider">{project.industry} Company</span>}
+            </div>
+
+            <h3
+                class="font-header text-xl md:text-2xl font-bold text-white
+                    tracking-tight group-hover:text-complementary transition-colors duration-300"
+            >
                 {project.title}
-            </h2>
+            </h3>
 
-            {project.clientName && <p class="font-body text-xs text-[#e8cf7c]/90 font-medium uppercase tracking-wider">Client: {project.clientName}</p>}
-
-            {project.techStack && <p class="font-body text-sm text-gray-400 leading-relaxed pt-2">{project.techStack}</p>}
+            <p class="font-body text-sm text-gray-400/90 leading-relaxed pt-1.5 line-clamp-2">
+                {
+                    project.description ||
+                        `A custom-designed web platform optimized for maximum user conversion, localized search authority, and premium visual branding.`
+                }
+            </p>
         </div>
 
-        {
-            project.liveUrl && (
-                <div class="pt-2 flex justify-center">
+        <div class="flex items-center justify-between pt-2 border-t border-white/5">
+            <div class="h-[2px] w-0 bg-primary group-hover:w-35 transition-all duration-500"></div>
+
+            {
+                project.liveUrl && (
                     <a
                         href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 font-body font-semibold text-xs uppercase tracking-wider text-white hover:text-[#e8cf7c] transition-colors group/link"
+                        class="inline-flex items-center gap-1.5 font-body font-semibold 
+                            text-[11px] uppercase tracking-widest text-white/80 
+                            hover:text-complementary transition-colors group/link
+                            group-hover:scale-105"
                     >
-                        View Live Project
+                        Explore Site
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -89,8 +109,8 @@ const imageAlt = project.title || 'Showcase Project Image';
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                         </svg>
                     </a>
-                </div>
-            )
-        }
+                )
+            }
+        </div>
     </div>
 </div>

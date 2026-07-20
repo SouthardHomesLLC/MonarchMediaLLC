@@ -1,0 +1,63 @@
+---
+const guide = [
+    {
+        packageName: 'Core',
+        statement: 'I need a professional website to establish credibility.',
+        description:
+            'A focused marketing website for businesses that need a polished, dependable online presence.'
+    },
+    {
+        packageName: 'Professional',
+        statement: 'I need more content and stronger lead generation.',
+        description:
+            'Expanded service pages, portfolio content, and conversion-focused functionality for established businesses.'
+    },
+    {
+        packageName: 'Premium',
+        statement: 'My website needs to support business operations.',
+        description:
+            'Dynamic content, secure administration, databases, and workflow integrations for growing organizations.'
+    },
+    {
+        packageName: 'Bespoke',
+        statement: 'My business needs custom software.',
+        description:
+            'Purpose-built applications, portals, APIs, automation, and digital systems engineered around unique requirements.'
+    }
+] as const;
+---
+
+<section aria-labelledby="buying-guide-heading">
+    <header class="max-w-3xl">
+        <p class="font-body text-xs font-bold uppercase tracking-[0.25em] text-complementary">
+            Find your fit
+        </p>
+
+        <h2
+            id="buying-guide-heading"
+            class="mt-4 font-header text-4xl text-white sm:text-5xl"
+        >
+            Which package is right for you?
+        </h2>
+    </header>
+
+    <div class="mt-10 grid gap-5 md:grid-cols-2">
+        {
+            guide.map((item) => (
+                <article class="rounded-2xl border border-white/10 bg-[#0c0c0e]/70 p-6">
+                    <p class="font-body text-xs font-bold uppercase tracking-[0.22em] text-header">
+                        {item.packageName}
+                    </p>
+
+                    <h3 class="mt-3 font-subheader text-2xl text-white">
+                        “{item.statement}”
+                    </h3>
+
+                    <p class="mt-4 font-body text-sm leading-6 text-white/55">
+                        {item.description}
+                    </p>
+                </article>
+            ))
+        }
+    </div>
+</section>
