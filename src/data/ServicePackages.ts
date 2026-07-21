@@ -2,9 +2,7 @@
 
 import type { PackageLevelLabel } from '@data/ProjectOptions';
 
-export type ServicePackageBillingType =
-    | 'starting-at'
-    | 'custom';
+export type ServicePackageBillingType = 'starting-at' | 'custom';
 
 export interface ServicePackage {
     id: string;
@@ -27,12 +25,10 @@ const servicePackages = [
         packageLevel: 'Core',
         name: 'Core',
         tagline: 'Build a professional foundation.',
-        basePrice: 1800,
+        basePrice: 1500,
         billingType: 'starting-at',
-        summary:
-            'A focused, high-performance website designed to establish credibility and help customers connect with your business.',
-        idealFor:
-            'Startups, independent professionals, contractors, and small local businesses.',
+        summary: 'A focused, high-performance website designed to establish credibility and help customers connect with your business.',
+        idealFor: 'Startups, independent professionals, contractors, and small local businesses.',
         features: [
             'Up to 3 custom pages',
             'Contact form integration',
@@ -51,12 +47,10 @@ const servicePackages = [
         packageLevel: 'Professional',
         name: 'Professional',
         tagline: 'Expand your reach and generate leads.',
-        basePrice: 3500,
+        basePrice: 3200,
         billingType: 'starting-at',
-        summary:
-            'An expanded business website with dedicated service content, lead-generation features, and a stronger search presence.',
-        idealFor:
-            'Established businesses with multiple services, locations, or portfolio needs.',
+        summary: 'An expanded business website with dedicated service content, lead-generation features, and a stronger search presence.',
+        idealFor: 'Established businesses with multiple services, locations, or portfolio needs.',
         features: [
             'Up to 7 custom pages',
             'Everything included in Core',
@@ -75,12 +69,10 @@ const servicePackages = [
         packageLevel: 'Premium',
         name: 'Premium',
         tagline: 'Turn your website into a business tool.',
-        basePrice: 6500,
+        basePrice: 6000,
         billingType: 'starting-at',
-        summary:
-            'A dynamic website with content management, advanced functionality, and integrations tailored to your daily operations.',
-        idealFor:
-            'Growing businesses that regularly update content or need automated digital workflows.',
+        summary: 'A dynamic website with content management, advanced functionality, and integrations tailored to your daily operations.',
+        idealFor: 'Growing businesses that regularly update content or need automated digital workflows.',
         features: [
             'Everything included in Professional',
             'Dynamic content collections',
@@ -99,13 +91,11 @@ const servicePackages = [
         packageLevel: 'Bespoke',
         name: 'Bespoke',
         tagline: 'Software engineered around your business.',
-        basePrice: 10000,
+        basePrice: 9000,
         billingType: 'starting-at',
         priceSuffix: '+',
-        summary:
-            'A fully tailored digital platform featuring custom software, secure infrastructure, and functionality built around your requirements.',
-        idealFor:
-            'Organizations requiring client portals, custom applications, APIs, automation, or proprietary systems.',
+        summary: 'A fully tailored digital platform featuring custom software, secure infrastructure, and functionality built around your requirements.',
+        idealFor: 'Organizations requiring client portals, custom applications, APIs, automation, or proprietary systems.',
         features: [
             'Custom solution architecture',
             'Secure API backend',
@@ -122,22 +112,14 @@ const servicePackages = [
     }
 ] as const satisfies readonly ServicePackage[];
 
-export const SERVICE_PACKAGES:
-    readonly ServicePackage[] = servicePackages;
+export const SERVICE_PACKAGES: readonly ServicePackage[] = servicePackages;
 
-export type ServicePackageId =
-    (typeof servicePackages)[number]['id'];
+export type ServicePackageId = (typeof servicePackages)[number]['id'];
 
-export type ServicePackageName =
-    (typeof servicePackages)[number]['name'];
+export type ServicePackageName = (typeof servicePackages)[number]['name'];
 
-export function formatServicePackagePrice(
-    servicePackage: ServicePackage
-): string {
-    if (
-        servicePackage.billingType === 'custom' ||
-        servicePackage.basePrice === undefined
-    ) {
+export function formatServicePackagePrice(servicePackage: ServicePackage): string {
+    if (servicePackage.billingType === 'custom' || servicePackage.basePrice === undefined) {
         return 'Custom pricing';
     }
 

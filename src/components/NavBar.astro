@@ -150,11 +150,8 @@ const getLinkClass = (href: string) => {
 
 <script>
     const toggleButton = document.getElementById('public-menu-toggle');
-
     const mobileMenu = document.getElementById('public-mobile-menu');
-
     const openIcon = toggleButton?.querySelector('.menu-open-icon');
-
     const closeIcon = toggleButton?.querySelector('.menu-close-icon');
 
     const setMobileMenuState = (isOpen: boolean) => {
@@ -163,43 +160,28 @@ const getLinkClass = (href: string) => {
         }
 
         toggleButton.setAttribute('aria-expanded', String(isOpen));
-
         toggleButton.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
 
         toggleButton.classList.toggle('bg-white/5', isOpen);
-
         toggleButton.classList.toggle('border-white/10', isOpen);
-
         toggleButton.classList.toggle('text-white', isOpen);
 
         mobileMenu.classList.toggle('opacity-0', !isOpen);
-
         mobileMenu.classList.toggle('invisible', !isOpen);
-
         mobileMenu.classList.toggle('scale-95', !isOpen);
 
         openIcon?.classList.toggle('opacity-0', isOpen);
-
         openIcon?.classList.toggle('rotate-180', isOpen);
-
         openIcon?.classList.toggle('scale-75', isOpen);
-
         openIcon?.classList.toggle('opacity-100', !isOpen);
-
         openIcon?.classList.toggle('rotate-0', !isOpen);
-
         openIcon?.classList.toggle('scale-100', !isOpen);
 
         closeIcon?.classList.toggle('opacity-100', isOpen);
-
         closeIcon?.classList.toggle('rotate-0', isOpen);
-
         closeIcon?.classList.toggle('scale-100', isOpen);
-
         closeIcon?.classList.toggle('opacity-0', !isOpen);
-
         closeIcon?.classList.toggle('-rotate-90', !isOpen);
-
         closeIcon?.classList.toggle('scale-75', !isOpen);
     };
 
