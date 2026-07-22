@@ -1,30 +1,15 @@
 {
     "extends": "astro/tsconfigs/base",
     "compilerOptions": {
-        "ignoreDeprecations": "6.0", //Ignore deprecation warnings for Astro 6.0
-        "baseUrl": "src",
         "paths": {
-            "@components/*": [
-                "components/*"
-            ],
-            "@layouts/*": [
-                "layouts/*"
-            ],
-            "@assets/*": [
-                "assets/*"
-            ],
-            "@pages/*": [
-                "pages/*"
-            ],
-            "@data/*": [
-                "data/*"
-            ],
-            "@styles/*": [
-                "styles/*"
-            ],
-            "@lib/*": [
-                "lib/*"
-            ]
+            "@components/*": ["./src/components/*"],
+            "@layouts/*": ["./src/layouts/*"],
+            "@assets/*": ["./src/assets/*"],
+            "@styles/*": ["./src/styles/*"],
+            "@pages/*": ["./src/pages/*"],
+            "@scripts/*": ["./src/scripts/*"],
+            "@data/*": ["./src/data/*"],
+            "@lib/*": ["./src/lib/*"]
         }
     }
 }

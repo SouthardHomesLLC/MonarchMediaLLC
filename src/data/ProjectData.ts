@@ -1,9 +1,6 @@
 // src/data/ProjectData.ts
 import type { SiteImageItem } from '@data/ImageData';
-import type {
-    IndustrySectorLabel,
-    PackageLevelLabel
-} from '@data/ProjectOptions';
+import type { IndustrySectorLabel, PackageLevelLabel } from '@data/ProjectOptions';
 
 export interface ProjectItem {
     id: number;
