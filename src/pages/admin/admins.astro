@@ -8,6 +8,10 @@ import { fetchApi } from '@lib/api';
 
 export const prerender = false;
 
+// --------------------------------------------------
+// Authentication
+// --------------------------------------------------
+
 const token = Astro.cookies.get('admin_token')?.value;
 
 if (!token) {
@@ -18,11 +22,19 @@ const authorizationHeaders = {
     Authorization: `Bearer ${token}`
 };
 
+// --------------------------------------------------
+// Page state
+// --------------------------------------------------
+
 let admins: Admin[] = [];
 let errorMessage = '';
 let createErrorMessage = '';
 
-const getRequiredString = (formData: FormData, field: string) => {
+// --------------------------------------------------
+// Form parsing helpers
+// --------------------------------------------------
+
+const getRequiredString = (formData: FormData, field: string): string => {
     const value = formData.get(field);
 
     if (typeof value !== 'string' || !value.trim()) {
@@ -32,9 +44,10 @@ const getRequiredString = (formData: FormData, field: string) => {
     return value.trim();
 };
 
-const getRequiredPassword = (formData: FormData, field: string) => {
+const getRequiredPassword = (formData: FormData, field: string): string => {
     const value = formData.get(field);
 
+    // Do not trim passwords because spaces may be intentional.
     if (typeof value !== 'string' || !value) {
         throw new Error(`${field} is required.`);
     }
@@ -42,7 +55,7 @@ const getRequiredPassword = (formData: FormData, field: string) => {
     return value;
 };
 
-const getRequiredId = (formData: FormData) => {
+const getRequiredId = (formData: FormData): number => {
     const value = Number(getRequiredString(formData, 'id'));
 
     if (!Number.isInteger(value) || value <= 0) {
@@ -52,11 +65,17 @@ const getRequiredId = (formData: FormData) => {
     return value;
 };
 
+// --------------------------------------------------
+// Create, update, and delete handling
+// --------------------------------------------------
+
 if (Astro.request.method === 'POST') {
     const formData = await Astro.request.formData();
+
     const intent = formData.get('intent');
 
     try {
+        // Create an administrator.
         if (intent === 'create') {
             const request: CreateAdminRequest = {
                 username: getRequiredString(formData, 'username'),
@@ -76,8 +95,10 @@ if (Astro.request.method === 'POST') {
             return Astro.redirect('/admin/admins?status=created', 303);
         }
 
+        // Update an existing administrator.
         if (intent === 'update') {
             const id = getRequiredId(formData);
+
             const newPassword = formData.get('newPassword');
 
             const request: UpdateAdminRequest = {
@@ -101,6 +122,7 @@ if (Astro.request.method === 'POST') {
             return Astro.redirect('/admin/admins?status=updated', 303);
         }
 
+        // Delete an administrator.
         if (intent === 'delete') {
             const id = getRequiredId(formData);
 
@@ -124,6 +146,10 @@ if (Astro.request.method === 'POST') {
     }
 }
 
+// --------------------------------------------------
+// Administrator loading
+// --------------------------------------------------
+
 try {
     admins = await fetchApi<Admin[]>('/api/admin/admins', {
         headers: authorizationHeaders
@@ -134,6 +160,10 @@ try {
     errorMessage = error instanceof Error ? error.message : 'Unable to load the administrators.';
 }
 
+// --------------------------------------------------
+// Success message handling
+// --------------------------------------------------
+
 const status = Astro.url.searchParams.get('status');
 
 const successMessages: Record<string, string> = {
@@ -142,7 +172,7 @@ const successMessages: Record<string, string> = {
     deleted: 'Administrator deleted successfully.'
 };
 
-const successMessage = status ? successMessages[status] : '';
+const successMessage = status ? (successMessages[status] ?? '') : '';
 ---
 
 <Layout title="Manage Administrators">
