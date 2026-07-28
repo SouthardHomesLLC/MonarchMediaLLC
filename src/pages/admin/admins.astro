@@ -1,0 +1,200 @@
+---
+// src/pages/admin/admins.astro
+import Layout from '@layouts/Layout.astro';
+import AdminCreateForm from '@components/admin/AdminCreateForm.astro';
+import AdminTable from '@components/admin/AdminTable.astro';
+import type {
+    Admin,
+    CreateAdminRequest,
+    UpdateAdminRequest
+} from '@data/AdminData';
+import { fetchApi } from '@lib/api';
+
+export const prerender = false;
+
+const token = Astro.cookies.get('admin_token')?.value;
+
+if (!token) {
+    return Astro.redirect('/admin/login');
+}
+
+const authorizationHeaders = {
+    Authorization: `Bearer ${token}`
+};
+
+let admins: Admin[] = [];
+let errorMessage = '';
+let createErrorMessage = '';
+
+const getRequiredString = (formData: FormData, field: string) => {
+    const value = formData.get(field);
+
+    if (typeof value !== 'string' || !value.trim()) {
+        throw new Error(`${field} is required.`);
+    }
+
+    return value.trim();
+};
+
+const getRequiredPassword = (formData: FormData, field: string) => {
+    const value = formData.get(field);
+
+    if (typeof value !== 'string' || !value) {
+        throw new Error(`${field} is required.`);
+    }
+
+    return value;
+};
+
+const getRequiredId = (formData: FormData) => {
+    const value = Number(getRequiredString(formData, 'id'));
+
+    if (!Number.isInteger(value) || value <= 0) {
+        throw new Error('A valid administrator ID is required.');
+    }
+
+    return value;
+};
+
+if (Astro.request.method === 'POST') {
+    const formData = await Astro.request.formData();
+    const intent = formData.get('intent');
+
+    try {
+        if (intent === 'create') {
+            const request: CreateAdminRequest = {
+                username: getRequiredString(formData, 'username'),
+                password: getRequiredPassword(formData, 'password'),
+                isActive: formData.get('isActive') === 'on'
+            };
+
+            await fetchApi<Admin>('/api/admin/admins', {
+                method: 'POST',
+                headers: {
+                    ...authorizationHeaders,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(request)
+            });
+
+            return Astro.redirect('/admin/admins?status=created', 303);
+        }
+
+        if (intent === 'update') {
+            const id = getRequiredId(formData);
+            const newPassword = formData.get('newPassword');
+
+            const request: UpdateAdminRequest = {
+                username: getRequiredString(formData, 'username'),
+                isActive: formData.get('isActive') === 'on'
+            };
+
+            if (typeof newPassword === 'string' && newPassword.trim()) {
+                request.newPassword = newPassword;
+            }
+
+            await fetchApi<Admin>(`/api/admin/admins/${id}`, {
+                method: 'PUT',
+                headers: {
+                    ...authorizationHeaders,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(request)
+            });
+
+            return Astro.redirect('/admin/admins?status=updated', 303);
+        }
+
+        if (intent === 'delete') {
+            const id = getRequiredId(formData);
+
+            await fetchApi<void>(`/api/admin/admins/${id}`, {
+                method: 'DELETE',
+                headers: authorizationHeaders
+            });
+
+            return Astro.redirect('/admin/admins?status=deleted', 303);
+        }
+
+        throw new Error('Unknown administrator action.');
+    } catch (error) {
+        const message =
+            error instanceof Error
+                ? error.message
+                : 'The administrator action could not be completed.';
+
+        if (intent === 'create') {
+            createErrorMessage = message;
+        } else {
+            errorMessage = message;
+        }
+    }
+}
+
+try {
+    admins = await fetchApi<Admin[]>('/api/admin/admins', {
+        headers: authorizationHeaders
+    });
+} catch (error) {
+    console.error('Failed to load administrators:', error);
+
+    errorMessage =
+        error instanceof Error
+            ? error.message
+            : 'Unable to load the administrators.';
+}
+
+const status = Astro.url.searchParams.get('status');
+
+const successMessages: Record<string, string> = {
+    created: 'Administrator created successfully.',
+    updated: 'Administrator updated successfully.',
+    deleted: 'Administrator deleted successfully.'
+};
+
+const successMessage = status ? successMessages[status] : '';
+---
+
+<Layout title="Manage Administrators">
+    <main class="mx-auto max-w-6xl px-4 py-10 text-white sm:py-12">
+        <div class="mb-8">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-purple-300">
+                Administration
+            </p>
+            <h1 class="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+                Manage administrators
+            </h1>
+            <p class="mt-3 max-w-2xl text-white/60">
+                Create accounts, change login details, and control access to the
+                Monarch Media administration area.
+            </p>
+        </div>
+
+        {
+            successMessage && (
+                <div
+                    role="status"
+                    class="mb-6 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100"
+                >
+                    {successMessage}
+                </div>
+            )
+        }
+
+        {
+            errorMessage && (
+                <div
+                    role="alert"
+                    class="mb-6 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100"
+                >
+                    {errorMessage}
+                </div>
+            )
+        }
+
+        <div class="grid items-start gap-6">
+            <AdminCreateForm errorMessage={createErrorMessage} />
+            <AdminTable admins={admins} />
+        </div>
+    </main>
+</Layout>

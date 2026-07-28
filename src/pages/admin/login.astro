@@ -25,7 +25,6 @@ if (Astro.request.method === 'POST') {
             const formData = await Astro.request.formData();
 
             const username = formData.get('username')?.toString().trim() ?? '';
-
             const password = formData.get('password')?.toString() ?? '';
 
             usernameValue = username;
