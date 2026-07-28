@@ -15,12 +15,10 @@ if (!token) {
 }
 
 const successMessage = Astro.url.searchParams.get('success') || '';
-
 const errorMessage = Astro.url.searchParams.get('error') || '';
 
 let team: TeamMemberItem[] = [];
 let availableImages: SiteImageItem[] = [];
-let loadError = '';
 
 const authenticatedRequest: RequestInit = {
     headers: {

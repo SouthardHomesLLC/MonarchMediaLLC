@@ -6,7 +6,6 @@ interface Props {
     images: any[];
 }
 const { images = [] } = Astro.props;
-const token = Astro.cookies.get('admin_token')?.value || '';
 ---
 
 <section class="bg-[#121214] border border-white/5 rounded-2xl p-6 shadow-2xl">
@@ -148,33 +147,57 @@ const token = Astro.cookies.get('admin_token')?.value || '';
     </form>
 </section>
 
-<script is:inline define:vars={{ token }}>
-    const addForm = document.getElementById('add-project-form');
+<script>
+    const addForm = document.querySelector<HTMLFormElement>('#add-project-form');
 
-    addForm?.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    const getString = (formData: FormData, field: string): string => {
+        const value = formData.get(field);
+
+        return typeof value === 'string' ? value : '';
+    };
+
+    const getInteger = (formData: FormData, field: string, fallback = 0): number => {
+        const value = Number.parseInt(getString(formData, field), 10);
+
+        return Number.isInteger(value) ? value : fallback;
+    };
+
+    addForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const submitButton = addForm.querySelector<HTMLButtonElement>('button[type="submit"]');
+
         const formData = new FormData(addForm);
-        const data = {};
+        const siteImageValue = getString(formData, 'siteImageId');
 
-        formData.forEach((value, key) => {
-            if (key === 'featured' || key === 'isPublic') {
-                data[key] = value === 'true';
-            } else if (key === 'siteImageId') {
-                data[key] = value ? parseInt(value, 10) : null;
-            } else if (key === 'displayOrder') {
-                data[key] = parseInt(value, 10);
-            } else if (key === 'package' || key === 'industry') {
-                data[key] = parseInt(value, 10);
-            } else {
-                data[key] = value;
-            }
-        });
+        const data = {
+            title: getString(formData, 'title').trim(),
+            clientName: getString(formData, 'clientName').trim(),
+            description: getString(formData, 'description').trim(),
+            techStack: getString(formData, 'techStack').trim(),
+            liveUrl: getString(formData, 'liveUrl').trim(),
+            siteImageId: siteImageValue ? Number.parseInt(siteImageValue, 10) : null,
+            package: getInteger(formData, 'package'),
+            industry: getInteger(formData, 'industry'),
+            displayOrder: Math.max(0, getInteger(formData, 'displayOrder')),
+            completedOn: getString(formData, 'completedOn') || null,
+            featured: formData.get('featured') === 'true',
+            isPublic: formData.get('isPublic') === 'true'
+        };
 
-        if (!data.hasOwnProperty('featured')) data['featured'] = false;
-        if (!data.hasOwnProperty('isPublic')) data['isPublic'] = false;
+        if (!data.title || !data.description) {
+            alert('Project title and description are required.');
+
+            return;
+        }
+
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Saving Project...';
+        }
 
         try {
-            const res = await fetch(addForm.action, {
+            const response = await fetch(addForm.action, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -182,14 +205,26 @@ const token = Astro.cookies.get('admin_token')?.value || '';
                 body: JSON.stringify(data)
             });
 
-            if (res.ok) {
-                window.location.href = window.location.pathname + '?success=Project+created+successfully!';
-            } else {
-                const errData = await res.json().catch(() => ({}));
-                alert('Creation failed: ' + (errData.error || 'Server error'));
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => null);
+
+                const errorMessage = typeof errorData?.error === 'string' ? errorData.error : 'Server error';
+
+                throw new Error(errorMessage);
             }
-        } catch (err) {
-            alert('Network error encountered trying to save project entry.');
+
+            const successMessage = encodeURIComponent('Project created successfully!');
+
+            window.location.assign(`${window.location.pathname}?success=${successMessage}`);
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'A network error occurred.';
+
+            alert(`Creation failed: ${message}`);
+
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Save Project Entry';
+            }
         }
     });
 </script>
