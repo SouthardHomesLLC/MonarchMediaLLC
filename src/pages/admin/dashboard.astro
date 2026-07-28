@@ -4,10 +4,6 @@ import { Icon } from 'astro-icon/components';
 
 export const prerender = false;
 
-if (!Astro.cookies.has('admin_token')) {
-    return Astro.redirect('/admin/login');
-}
-
 const GOATCOUNTER_SUBDOMAIN = 'monarchmediallc';
 const BASE_URL = `https://${GOATCOUNTER_SUBDOMAIN}.goatcounter.com/counter//.json`;
 
@@ -63,8 +59,14 @@ const managementCards = [
         title: 'Media Library',
         description: 'Upload dynamic showcase images, manage descriptive alt data, and maintain global media asset links.',
         icon: 'heroicons:photo',
-        accent: 'amber',
-        wide: true
+        accent: 'amber'
+    },
+    {
+        href: '/admin/admins',
+        title: 'Administrator Access',
+        description: 'Create administrator accounts, update login credentials, and control access to the management platform.',
+        icon: 'heroicons:shield-check',
+        accent: 'rose'
     }
 ] satisfies readonly ManagementCard[];
 
@@ -86,6 +88,12 @@ const accentClasses = {
         icon: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
         title: 'group-hover:text-amber-400',
         arrow: 'group-hover:text-amber-400'
+    },
+    rose: {
+        card: 'hover:border-rose-500/30',
+        icon: 'bg-rose-500/10 border-rose-500/20 text-rose-400',
+        title: 'group-hover:text-rose-400',
+        arrow: 'group-hover:text-rose-400'
     }
 } as const;
 ---
@@ -117,8 +125,8 @@ const accentClasses = {
                                 bg-[#121214] p-6 shadow-xl
                                 transition-all duration-300
                                 hover:-translate-y-1 hover:bg-white/[0.01]`,
-                                accent.card,
-                                card.wide && 'md:col-span-2'
+                                accent.card
+                                //card.wide && 'md:col-span-2'
                             ]}
                         >
                             <div class="flex items-start justify-between gap-5">

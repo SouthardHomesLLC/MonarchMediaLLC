@@ -12,12 +12,7 @@ export const prerender = false;
 
 const token = Astro.cookies.get('admin_token')?.value;
 
-if (!token) {
-    return Astro.redirect('/admin/login');
-}
-
 const successMessage = Astro.url.searchParams.get('success') || '';
-
 const errorMessage = Astro.url.searchParams.get('error') || '';
 
 let projects: ProjectItem[] = [];

@@ -6,12 +6,6 @@ import type { LoginResponse } from '@data/AuthData';
 
 const API_BASE_URL = import.meta.env.AZURE_API_URL;
 
-const existingToken = Astro.cookies.get('admin_token')?.value;
-
-if (existingToken && Astro.request.method === 'GET') {
-    return Astro.redirect('/admin/dashboard');
-}
-
 let errorMessage = '';
 let usernameValue = '';
 
