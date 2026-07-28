@@ -18,7 +18,8 @@ const formatDate = (value: string) =>
     <div class="border-b border-white/10 px-5 py-5 sm:px-6">
         <h2 class="text-xl font-semibold text-white">Administrators</h2>
         <p class="mt-1 text-sm text-white/60">
-            {admins.length} {admins.length === 1 ? 'account' : 'accounts'}
+            {admins.length}
+            {admins.length === 1 ? 'account' : 'accounts'}
         </p>
     </div>
 
@@ -34,9 +35,7 @@ const formatDate = (value: string) =>
                         <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-5 transition hover:bg-white/[0.03] sm:px-6">
                             <div class="min-w-0">
                                 <div class="flex flex-wrap items-center gap-3">
-                                    <h3 class="truncate font-semibold text-white">
-                                        {admin.username}
-                                    </h3>
+                                    <h3 class="truncate font-semibold text-white">{admin.username}</h3>
                                     <span
                                         class:list={[
                                             'rounded-full border px-2.5 py-1 text-xs font-medium',
@@ -48,9 +47,7 @@ const formatDate = (value: string) =>
                                         {admin.isActive ? 'Active' : 'Inactive'}
                                     </span>
                                 </div>
-                                <p class="mt-1 text-sm text-white/45">
-                                    Created {formatDate(admin.createdAtUtc)}
-                                </p>
+                                <p class="mt-1 text-sm text-white/45">Created {formatDate(admin.createdAtUtc)}</p>
                             </div>
 
                             <span class="shrink-0 text-sm font-medium text-purple-300">
@@ -66,9 +63,7 @@ const formatDate = (value: string) =>
 
                                 <div class="grid gap-5 md:grid-cols-2">
                                     <label class="block">
-                                        <span class="mb-2 block text-sm font-medium text-white/80">
-                                            Username
-                                        </span>
+                                        <span class="mb-2 block text-sm font-medium text-white/80">Username</span>
                                         <input
                                             type="text"
                                             name="username"
@@ -82,9 +77,7 @@ const formatDate = (value: string) =>
                                     </label>
 
                                     <label class="block">
-                                        <span class="mb-2 block text-sm font-medium text-white/80">
-                                            New password
-                                        </span>
+                                        <span class="mb-2 block text-sm font-medium text-white/80">New password</span>
                                         <input
                                             type="password"
                                             name="newPassword"
@@ -103,9 +96,7 @@ const formatDate = (value: string) =>
                                         checked={admin.isActive}
                                         class="size-4 rounded border-white/20 bg-black/20 text-purple-500 focus:ring-purple-400/30"
                                     />
-                                    <span class="text-sm text-white/75">
-                                        Account is active
-                                    </span>
+                                    <span class="text-sm text-white/75">Account is active</span>
                                 </label>
 
                                 <div class="flex flex-wrap items-center justify-between gap-4">
@@ -118,12 +109,7 @@ const formatDate = (value: string) =>
                                 </div>
                             </form>
 
-                            <form
-                                method="POST"
-                                class="mt-5 border-t border-white/10 pt-5"
-                                data-delete-form
-                                data-username={admin.username}
-                            >
+                            <form method="POST" class="mt-5 border-t border-white/10 pt-5" data-delete-form data-username={admin.username}>
                                 <input type="hidden" name="intent" value="delete" />
                                 <input type="hidden" name="id" value={admin.id} />
 
@@ -146,9 +132,7 @@ const formatDate = (value: string) =>
     document.querySelectorAll<HTMLFormElement>('[data-delete-form]').forEach((form) => {
         form.addEventListener('submit', (event) => {
             const username = form.dataset.username ?? 'this administrator';
-            const confirmed = window.confirm(
-                `Delete ${username}? This action cannot be undone.`
-            );
+            const confirmed = window.confirm(`Delete ${username}? This action cannot be undone.`);
 
             if (!confirmed) {
                 event.preventDefault();

@@ -6,23 +6,15 @@ interface Props {
 const { errorMessage = '' } = Astro.props;
 ---
 
-<section
-    id="create-admin"
-    class="rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-xl shadow-black/10 sm:p-6"
->
+<section id="create-admin" class="rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-xl shadow-black/10 sm:p-6">
     <div class="mb-5">
         <h2 class="text-xl font-semibold text-white">Add administrator</h2>
-        <p class="mt-1 text-sm text-white/60">
-            Create a new account with access to the administration area.
-        </p>
+        <p class="mt-1 text-sm text-white/60">Create a new account with access to the administration area.</p>
     </div>
 
     {
         errorMessage && (
-            <div
-                role="alert"
-                class="mb-5 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100"
-            >
+            <div role="alert" class="mb-5 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
                 {errorMessage}
             </div>
         )
@@ -33,9 +25,7 @@ const { errorMessage = '' } = Astro.props;
 
         <div class="grid gap-5 md:grid-cols-2">
             <label class="block">
-                <span class="mb-2 block text-sm font-medium text-white/80">
-                    Username
-                </span>
+                <span class="mb-2 block text-sm font-medium text-white/80"> Username </span>
                 <input
                     type="text"
                     name="username"
@@ -49,9 +39,7 @@ const { errorMessage = '' } = Astro.props;
             </label>
 
             <label class="block">
-                <span class="mb-2 block text-sm font-medium text-white/80">
-                    Temporary password
-                </span>
+                <span class="mb-2 block text-sm font-medium text-white/80"> Temporary password </span>
                 <input
                     type="password"
                     name="password"
@@ -65,12 +53,7 @@ const { errorMessage = '' } = Astro.props;
         </div>
 
         <label class="flex w-fit cursor-pointer items-center gap-3">
-            <input
-                type="checkbox"
-                name="isActive"
-                checked
-                class="size-4 rounded border-white/20 bg-black/20 text-purple-500 focus:ring-purple-400/30"
-            />
+            <input type="checkbox" name="isActive" checked class="size-4 rounded border-white/20 bg-black/20 text-purple-500 focus:ring-purple-400/30" />
             <span class="text-sm text-white/75">Account is active</span>
         </label>
 
