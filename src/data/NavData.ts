@@ -14,5 +14,6 @@ export const adminItems: linkItem[] = [
     { linkText: 'Dashboard', href: '/admin/dashboard' },
     { linkText: 'Projects', href: '/admin/projects' },
     { linkText: 'Images', href: '/admin/images' },
-    { linkText: 'Team', href: '/admin/team' }
+    { linkText: 'Team', href: '/admin/team' },
+    { linkText: 'Admins', href: '/admin/admin' }
 ];
