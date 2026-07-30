@@ -15,7 +15,17 @@ import logo from '@assets/MonarchPurple.png';
     >
     </div>
 
-    <Image src={logo} width={192} alt="Monarch Media LLC" class="z-10 mb-2 w-48 drop-shadow-2xl" loading="eager" fetchpriority="high" format="webp" />
+    <Image
+        src={logo}
+        width={192}
+        densities={[1.5, 2]}
+        alt="Monarch Media LLC"
+        class="z-10 mb-2 w-48 drop-shadow-2xl"
+        loading="eager"
+        fetchpriority="high"
+        format="webp"
+        quality={75}
+    />
 
     <h1
         class="z-10 max-w-4xl bg-gradient-to-b from-white to-gray-400 bg-clip-text

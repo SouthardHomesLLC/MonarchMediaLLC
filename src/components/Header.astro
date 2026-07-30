@@ -13,7 +13,7 @@ const isAdminRoute = currentPath.startsWith('/admin') && currentPath !== '/admin
 <header class="relative z-20 w-full border-b border-white/15 px-4">
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between py-2">
         <a href="/" aria-label="Monarch Media LLC home" class="flex transition-transform duration-200 hover:scale-105">
-            <Image src={logoImage} alt="Monarch Media LLC's logo" width={60} height={60} densities={[1.5, 2]} loading="eager" format="webp" />
+            <Image src={logoImage} alt="Monarch Media LLC's logo" width={60} height={60} densities={[1.5, 2]} loading="eager" format="webp" quality={75} />
         </a>
 
         {isAdminRoute ? <AdminNavBar /> : <NavBar />}
