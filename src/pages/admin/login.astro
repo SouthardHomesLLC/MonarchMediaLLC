@@ -9,6 +9,39 @@ const API_BASE_URL = import.meta.env.AZURE_API_URL;
 let errorMessage = '';
 let usernameValue = '';
 
+async function fetchWithRetry(url: URL, options: RequestInit, maxAttempts = 2): Promise<Response> {
+    let lastError: unknown;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: AbortSignal.timeout(4_000)
+            });
+
+            const isRetryable = response.status === 502 || response.status === 503 || response.status === 504;
+
+            if (!isRetryable) {
+                return response;
+            }
+
+            await response.body?.cancel();
+
+            lastError = new Error(`Login API returned temporary status ${response.status}`);
+        } catch (error) {
+            lastError = error;
+
+            console.warn(`Login API attempt ${attempt} failed:`, error);
+        }
+
+        if (attempt < maxAttempts) {
+            await new Promise((resolve) => setTimeout(resolve, 750));
+        }
+    }
+
+    throw lastError ?? new Error('Authentication service unavailable.');
+}
+
 if (Astro.request.method === 'POST') {
     if (!API_BASE_URL) {
         console.error('AZURE_API_URL is not configured.');
@@ -28,7 +61,7 @@ if (Astro.request.method === 'POST') {
             } else {
                 const loginUrl = new URL('/api/auth/login', API_BASE_URL);
 
-                const response = await fetch(loginUrl, {
+                const response = await fetchWithRetry(loginUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -77,9 +110,9 @@ if (Astro.request.method === 'POST') {
                 }
             }
         } catch (error) {
-            console.error('Login submission error:', error);
+            console.error('Authentication service unavailable after retrying:', error);
 
-            errorMessage = 'Unable to connect to the authentication service.';
+            errorMessage = 'The server is taking longer than expected to start. Please wait a few seconds and try again.';
         }
     }
 }
