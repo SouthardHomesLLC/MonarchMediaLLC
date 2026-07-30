@@ -5,7 +5,7 @@ import { socialLinks } from '@data/SocialData';
 import logo from '@assets/MonarchPurple.png';
 ---
 
-<div class="relative flex flex-col items-center justify-center px-4 pb-4 max-w-6xl mx-auto min-h-svh">
+<section class="relative mx-auto flex min-h-[calc(100svh-5rem)] max-w-6xl flex-col items-center justify-center px-4 py-16 text-center">
     <div
         id="purpleblob"
         aria-hidden="true"
@@ -15,48 +15,46 @@ import logo from '@assets/MonarchPurple.png';
     >
     </div>
 
-    <Image src={logo} alt="Monarch Media LLC's logo" class="z-10 mb-2 w-48 drop-shadow-2xl" />
+    <Image src={logo} width={192} alt="Monarch Media LLC" class="z-10 mb-2 w-48 drop-shadow-2xl" loading="eager" fetchpriority="high" format="webp" />
 
     <h1
-        class="z-10 bg-gradient-to-b from-white to-gray-400 bg-clip-text
-                pb-4 text-center font-header font-bold tracking-tight
-                text-transparent text-5xl"
+        class="z-10 max-w-4xl bg-gradient-to-b from-white to-gray-400 bg-clip-text
+            pb-4 font-header text-5xl font-bold tracking-tight text-transparent
+            md:text-6xl"
     >
         Web Design & Digital Marketing in Terre Haute
     </h1>
 
-    <section id="services" aria-labelledby="services-heading" class="z-10 pb-8 text-center">
-        <h2 id="services-heading" class="sr-only">Our Creative and Digital Services</h2>
-
-        <p class="font-body text-sm font-semibold uppercase
-            tracking-[0.2em] text-gray-400 md:text-base">
-            Social Media
+    <div id="services" class="z-10 pb-8">
+        <p class="font-body text-sm font-semibold uppercase tracking-[0.2em] text-gray-400 md:text-base">
+            Web Design
             <span aria-hidden="true" class="text-complementary">|</span>
             Branding
             <span aria-hidden="true" class="text-complementary">|</span>
-            Web Design
+            Social Media
         </p>
-    </section>
+    </div>
 
-    <p class="z-10 max-w-xl pb-8 text-center font-body text-base leading-relaxed
-            text-gray-300 md:text-lg">
-        Metamorphosis in progress. Our full website is coming soon.
-    </p>
-
-    <p class="z-10 max-w-2xl pb-8 text-center font-body text-base
-        leading-relaxed text-gray-300 md:text-lg">
+    <p class="z-10 max-w-2xl pb-8 font-body text-base leading-relaxed text-gray-300 md:text-lg">
         Monarch Media LLC helps businesses in Terre Haute and throughout the Wabash Valley build stronger brands through custom websites, graphic design, social
         media, and digital marketing.
     </p>
 
-    <div class="z-10 mb-8 flex flex-wrap justify-center gap-4">
-        <a href="/contact" class="rounded-lg bg-primary px-6 py-3 font-semibold text-white
-            transition hover:bg-primary/80"> Start a Project </a>
+    <div class="z-10 mb-8 flex flex-col justify-center gap-4 sm:flex-row">
+        <a
+            href="/contact"
+            class="btn rounded-lg border border-transparent px-6 py-3
+                transition-all duration-300
+                hover:border-complementary hover:shadow-lg hover:shadow-primary/20"
+        >
+            Start a Project
+        </a>
 
         <a
             href="/web-development"
             class="rounded-lg border border-white/20 px-6 py-3 font-semibold
-            text-white transition hover:border-primary/60 hover:bg-white/5"
+            text-white transition-all duration-300
+            hover:border-complementary hover:bg-white/5"
         >
             View Website Packages
         </a>
@@ -76,8 +74,7 @@ import logo from '@assets/MonarchPurple.png';
                         rel={isExternal ? 'noopener noreferrer' : undefined}
                         class="flex h-10 w-10 items-center justify-center rounded-full
                             border border-white/10 bg-white/[0.025] text-gray-400
-                            transition-all duration-200
-                            hover:-translate-y-1 hover:scale-105
+                            transition-all duration-200 hover:-translate-y-1 hover:scale-105
                             hover:border-primary/50 hover:bg-primary/15 hover:text-white"
                     >
                         <Icon name={link.icon} class="h-5 w-5" aria-hidden="true" />
@@ -86,4 +83,8 @@ import logo from '@assets/MonarchPurple.png';
             })
         }
     </div>
-</div>
+
+    <a href="#what-we-do" aria-label="Continue to our services" class="absolute bottom-5 z-10 hidden text-gray-500 transition hover:text-white md:block">
+        <Icon name="mdi:chevron-down" class="h-8 w-8 animate-bounce" aria-hidden="true" />
+    </a>
+</section>
