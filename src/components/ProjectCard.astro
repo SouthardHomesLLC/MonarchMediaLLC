@@ -1,6 +1,6 @@
 ---
 // src/components/ProjectCard.astro
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import type { ProjectItem } from '@data/ProjectData';
 
 interface Props {
@@ -12,6 +12,20 @@ const { project, loading = 'lazy' } = Astro.props;
 
 const imageUrl = project.siteImage?.publicUrl;
 const imageAlt = project.siteImage?.altText || project.title || 'Showcase project image';
+
+//Generate a larger optimized asset during the static build for PhotoSwipe.
+//Visitors receive this deployed asset instead of requesting the source image
+//from Supabase when they open the lightbox.
+const lightboxImage = imageUrl
+    ? await getImage({
+          src: imageUrl,
+          width: 1600,
+          height: 1200,
+          fit: 'inside',
+          format: 'webp',
+          quality: 85
+      })
+    : null;
 ---
 
 <article
@@ -42,13 +56,11 @@ const imageAlt = project.siteImage?.altText || project.title || 'Showcase projec
             border-b border-white/5 bg-[#121214]
             aspect-[4/3]">
         {
-            imageUrl ? (
+            imageUrl && lightboxImage ? (
                 <a
-                    href={imageUrl}
-                    data-pswp-width="1920"
-                    data-pswp-height="1080"
-                    target="_blank"
-                    rel="noreferrer"
+                    href={lightboxImage.src}
+                    data-pswp-width={lightboxImage.attributes.width}
+                    data-pswp-height={lightboxImage.attributes.height}
                     aria-label={`View a larger preview of ${project.title}`}
                     class="portfolio-lightbox-trigger block h-full w-full cursor-zoom-in"
                 >

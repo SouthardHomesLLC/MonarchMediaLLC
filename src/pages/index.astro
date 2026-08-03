@@ -3,6 +3,7 @@ import Layout from '@layouts/Layout.astro';
 import Hero from '@components/Hero.astro';
 import MeetTheTeam from '@components/MeetTheTeam.astro';
 import { Icon } from 'astro-icon/components';
+import LinkButton from '@components/LinkButton.astro';
 
 const services = [
     {
@@ -49,7 +50,7 @@ const reasons = [
     {
         icon: 'mdi:map-marker-radius-outline',
         title: 'Local and approachable',
-        description: 'You work with a Terre Haute team you can reach—not an anonymous platform or faraway support queue.'
+        description: 'You work with a Terre Haute team you can reach, we are not an anonymous platform or faraway support queue.'
     }
 ];
 
@@ -105,10 +106,7 @@ const steps = [
                             </div>
                             <h3 class="mt-6 font-header text-2xl font-bold text-white">{service.title}</h3>
                             <p class="mt-3 leading-relaxed text-gray-300">{service.description}</p>
-                            <a href={service.href} class="mt-5 inline-flex items-center gap-2 font-semibold text-purple-300 transition group-hover:text-white">
-                                {service.linkText}
-                                <Icon name="mdi:arrow-right" class="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                            </a>
+                            <LinkButton href={service.href} text={service.linkText} />
                         </article>
                     ))
                 }

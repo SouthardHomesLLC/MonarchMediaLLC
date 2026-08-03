@@ -61,7 +61,7 @@
         border-radius: var(--btn-border-radius, 0.25rem);
 
         &:hover {
-            @apply bg-primary/85;
+            @apply bg-primary/70;
         }
 
         &:disabled {
